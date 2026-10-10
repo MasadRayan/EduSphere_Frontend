@@ -336,8 +336,9 @@ The **course code tag**: a mono code in a bordered tag, used on every course car
 - [ ] Friendly messages for blocked, deleted and Google-only accounts
 
 ### Phase 3: Public Pages
-- [ ] Landing page (hero built around the course code signature, programs, how enrollment works, CTA)
+- [x] Landing page (hero built around the course code signature, programs, how enrollment works, CTA)
 - [ ] Public department/program/course browsing (if the backend allows public reads, otherwise gate behind login)
+- [x] Contact page (desk directory and message form)
 - [ ] SEO metadata, Open Graph
 
 ### Phase 4: Student Dashboard

@@ -9,6 +9,7 @@ import { ThemeToggle } from "./theme-toggle";
 const SITE_LINKS = [
   { label: "Home", href: "/" },
   { label: "Programs", href: "/programs" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export async function SiteHeader() {
@@ -18,10 +19,10 @@ export async function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-background/80 backdrop-blur">
-      <div className="mx-auto flex h-14 w-full max-w-7xl items-center gap-4 px-4">
+      <div className="mx-auto grid h-16 w-full max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-4">
         <Link
           href="/"
-          className="flex items-center gap-2 rounded-md outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
+          className="flex items-center gap-2 justify-self-start rounded-md outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
         >
           <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <GraduationCap className="size-4" aria-hidden="true" />
@@ -31,7 +32,10 @@ export async function SiteHeader() {
           </span>
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
+        <nav
+          aria-label="Main"
+          className="hidden items-center gap-1 justify-self-center md:flex"
+        >
           {SITE_LINKS.map((link) => (
             <Button key={link.href} asChild variant="ghost" size="sm">
               <Link href={link.href}>{link.label}</Link>
@@ -39,7 +43,7 @@ export async function SiteHeader() {
           ))}
         </nav>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="flex items-center gap-2 justify-self-end">
           <ThemeToggle />
           {session ? (
             <Button asChild size="sm" className="hidden md:inline-flex">
