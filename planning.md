@@ -337,9 +337,9 @@ The **course code tag**: a mono code in a bordered tag, used on every course car
 
 ### Phase 3: Public Pages
 - [x] Landing page (hero built around the course code signature, programs, how enrollment works, CTA)
-- [ ] Public department/program/course browsing (if the backend allows public reads, otherwise gate behind login)
+- [x] Public department/program/course browsing (if the backend allows public reads, otherwise gate behind login)
 - [x] Contact page (desk directory and message form)
-- [ ] SEO metadata, Open Graph
+- [x] SEO metadata, Open Graph
 
 ### Phase 4: Student Dashboard
 - [ ] Analytics dashboard (CGPA, credits, attendance %, grade breakdown, spend) with recharts
@@ -468,8 +468,8 @@ Full rules live in `AGENTS.md` (Definition of Done). After finishing ANY task, t
 - [ ] Blocked, deleted and Google-only accounts show the correct message
 
 ### Phase 3: Public
-- [ ] Site layout on every public and auth page; no sidebar anywhere
-- [ ] Metadata and Open Graph set; all images via `next/image`
+- [x] Site layout on every public and auth page; no sidebar anywhere
+- [x] Metadata and Open Graph set; all images via `next/image`
 
 ### Phase 4: Student
 - [ ] Each of the 4 private route layers verified (logged out, wrong role, blocked, unapproved)
