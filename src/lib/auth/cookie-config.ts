@@ -1,0 +1,23 @@
+export const ACCESS_TOKEN_COOKIE = "accessToken";
+export const REFRESH_TOKEN_COOKIE = "refreshToken";
+
+export const ACCESS_TOKEN_MAX_AGE = 60 * 60 * 24;
+export const REFRESH_TOKEN_MAX_AGE = 60 * 60 * 24 * 7;
+
+export interface AuthCookieOptions {
+  httpOnly: true;
+  secure: boolean;
+  sameSite: "lax";
+  path: "/";
+  maxAge: number;
+}
+
+export function authCookieOptions(maxAge: number): AuthCookieOptions {
+  return {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge,
+  };
+}

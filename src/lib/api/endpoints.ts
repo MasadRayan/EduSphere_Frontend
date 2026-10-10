@@ -1,0 +1,83 @@
+export const endpoints = {
+  auth: {
+    register: "/api/auth/register",
+    verifyEmail: "/api/auth/verify-email",
+    login: "/api/auth/login",
+    googleLogin: "/api/auth/google-login",
+    me: "/api/auth/me",
+    refreshToken: "/api/auth/refresh-token",
+    forgotPassword: "/api/auth/forgot-password",
+    resetPassword: "/api/auth/reset-password",
+    changePassword: "/api/auth/change-password",
+  },
+  student: {
+    apply: "/api/student/apply",
+    application: "/api/student/application",
+    me: "/api/student/me",
+    profile: "/api/student/profile",
+    avatar: "/api/student/avatar",
+    registeredCourses: "/api/student/registered-courses",
+    attendance: "/api/student/attendance",
+    grades: "/api/student/grades",
+    cgpa: "/api/student/cgpa",
+    transcript: "/api/student/transcript",
+    applications: "/api/student/applications",
+  },
+  instructor: {
+    apply: "/api/instructor/apply",
+    application: "/api/instructor/application",
+    resume: "/api/instructor/resume",
+    me: "/api/instructor/me",
+    profile: "/api/instructor/profile",
+    avatar: "/api/instructor/avatar",
+    list: "/api/instructor",
+    applications: "/api/instructor/applications",
+  },
+  departments: "/api/departments",
+  programs: "/api/programs",
+  courses: "/api/courses",
+  semesters: "/api/semesters",
+  courseSections: "/api/course-sections",
+  studentSections: "/api/student-sections",
+  courseRegistrations: {
+    base: "/api/course-registrations",
+    enroll: "/api/course-registrations/enroll",
+    mine: "/api/course-registrations/my",
+  },
+  payments: {
+    base: "/api/payments",
+    mine: "/api/payments/my",
+  },
+  exams: "/api/exams",
+  attendance: "/api/attendance",
+  results: "/api/results",
+  analytics: {
+    admin: "/api/analytics/admin",
+    student: "/api/analytics/student",
+    instructor: "/api/analytics/instructor",
+  },
+  users: "/api/users",
+} as const;
+
+/**
+ * Path prefixes the browser proxy is allowed to forward. Anything not covered
+ * here is rejected so the proxy cannot be used as an open relay.
+ */
+export const PROXY_ALLOWED_PREFIXES = [
+  "/api/auth/",
+  "/api/student",
+  "/api/instructor",
+  "/api/departments",
+  "/api/programs",
+  "/api/courses",
+  "/api/semesters",
+  "/api/course-sections",
+  "/api/student-sections",
+  "/api/course-registrations",
+  "/api/payments",
+  "/api/exams",
+  "/api/attendance",
+  "/api/results",
+  "/api/analytics",
+  "/api/users",
+] as const;
