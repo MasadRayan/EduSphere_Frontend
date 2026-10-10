@@ -4,12 +4,14 @@ import {
   Instrument_Sans,
   JetBrains_Mono,
 } from "next/font/google";
+import { Suspense } from "react";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { FlashToaster } from "@/components/shared/flash-toaster";
 import { ScrollToTop } from "@/components/shared/scroll-to-top";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const instrumentSans = Instrument_Sans({
@@ -28,12 +30,43 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  applicationName: SITE_NAME,
   title: {
-    default: "EduSphere",
+    default: SITE_NAME,
     template: "%s | EduSphere",
   },
-  description:
-    "EduSphere is a university management platform for applications, enrollment, payments, attendance, results and analytics.",
+  description: SITE_DESCRIPTION,
+  keywords: [
+    "university management",
+    "student enrollment",
+    "course registration",
+    "academic records",
+    "bKash payments",
+    "transcript",
+  ],
+  authors: [{ name: SITE_NAME }],
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  formatDetection: {
+    telephone: false,
+  },
 };
 
 export const viewport: Viewport = {
@@ -55,8 +88,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </QueryProvider>
         </ThemeProvider>
         <Toaster position="top-center" />
-        <FlashToaster />
-        <ScrollToTop />
+        <Suspense fallback={null}>
+          <FlashToaster />
+        </Suspense>
+        <Suspense fallback={null}>
+          <ScrollToTop />
+        </Suspense>
       </body>
     </html>
   );

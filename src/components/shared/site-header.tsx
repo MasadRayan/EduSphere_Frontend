@@ -10,6 +10,7 @@ import { ThemeToggle } from "./theme-toggle";
 const SITE_LINKS = [
   { label: "Home", href: "/" },
   { label: "Programs", href: "/programs" },
+  { label: "Courses", href: "/courses" },
   { label: "Contact", href: "/contact" },
 ];
 

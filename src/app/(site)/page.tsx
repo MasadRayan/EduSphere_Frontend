@@ -8,6 +8,7 @@ import {
   UserRoundCog,
   Users,
 } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { CourseCodeTag } from "@/components/shared/course-code-tag";
 import { StatusBadge } from "@/components/shared/status-badge";
@@ -111,6 +112,17 @@ const FAQS = [
     a: "Attendance, exam results and your running CGPA are on your dashboard each term. Once results are published you can download a verifiable PDF transcript.",
   },
 ];
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "/",
+    title: "EduSphere | The registrar, online",
+    description:
+      "Applications, enrollment, bKash payments, attendance and results, all on one student record.",
+  },
+};
 
 export default function HomePage() {
   return (

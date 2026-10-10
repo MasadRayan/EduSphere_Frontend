@@ -33,3 +33,39 @@ export interface SessionUser extends User {
 export interface Session {
   user: SessionUser;
 }
+
+export interface Department {
+  id: string;
+  name: string;
+  code: string;
+}
+
+export interface Program {
+  id: string;
+  name: string;
+  degreeType: string;
+  totalCredits: number;
+  departmentId: string;
+  department?: Department;
+}
+
+export interface CoursePrerequisite {
+  id: string;
+  courseId: string;
+  prerequisiteId: string;
+  prerequisite?: {
+    id?: string;
+    code: string;
+    title: string;
+  };
+}
+
+export interface Course {
+  id: string;
+  code: string;
+  title: string;
+  creditHours: number;
+  departmentId: string;
+  department?: Department;
+  prerequisites?: CoursePrerequisite[];
+}
