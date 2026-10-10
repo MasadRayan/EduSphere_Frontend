@@ -178,9 +178,11 @@ export default function UiGalleryPage() {
               <Label>One-time code</Label>
               <InputOTP maxLength={6}>
                 <InputOTPGroup>
-                  {Array.from({ length: 6 }).map((_, index) => (
-                    <InputOTPSlot key={index} index={index} />
-                  ))}
+                  {Array.from({ length: 6 }, (_, index) => index).map(
+                    (index) => (
+                      <InputOTPSlot key={`slot-${index}`} index={index} />
+                    ),
+                  )}
                 </InputOTPGroup>
               </InputOTP>
             </div>

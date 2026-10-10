@@ -314,17 +314,17 @@ The **course code tag**: a mono code in a bordered tag, used on every course car
 ## 7. Implementation Phases
 
 ### Phase 1: Setup and Foundation
-- [ ] Install dependencies (ofetch, @tanstack/react-query, react-hook-form, @hookform/resolvers, zod, sonner, lucide-react, zustand, recharts, date-fns, server-only)
-- [ ] Set up shadcn/ui, bring in every component (`npx shadcn@latest add --all`), then apply the design tokens above. Always compose pages from these components before writing custom ones.
-- [ ] Create `.env.local` and `next.config.ts` (image domains)
-- [ ] Types: enums (Role, UserStatus, ApplicationStatus, EnrollmentStatus, PaymentStatus, etc.), envelope, pagination meta
-- [ ] `server-fetch`, `client-fetch`, error mapper (including the 500 auth quirk)
-- [ ] Proxy route handler with refresh and multipart support
-- [ ] Cookie helpers, `getSession`, `requireRole`, route guard
-- [ ] React Query provider, sonner toaster, theme provider
-- [ ] Shared components (DataTable, PageHeader, StatCard, EmptyState, StatusBadge)
-- [ ] Two layouts: site layout (navbar + footer) and dashboard layout (sidebar + topbar), see section 3.8
-- [ ] Dashboard shell with data-driven nav per role
+- [x] Install dependencies (ofetch, @tanstack/react-query, react-hook-form, @hookform/resolvers, zod, sonner, lucide-react, zustand, recharts, date-fns, server-only)
+- [x] Set up shadcn/ui, bring in every component (`npx shadcn@latest add --all`), then apply the design tokens above. Always compose pages from these components before writing custom ones.
+- [x] Create `.env.local` and `next.config.ts` (image domains)
+- [x] Types: enums (Role, UserStatus, ApplicationStatus, EnrollmentStatus, PaymentStatus, etc.), envelope, pagination meta
+- [x] `server-fetch`, `client-fetch`, error mapper (including the 500 auth quirk)
+- [x] Proxy route handler with refresh and multipart support
+- [x] Cookie helpers, `getSession`, `requireRole`, route guard
+- [x] React Query provider, sonner toaster, theme provider
+- [x] Shared components (DataTable, PageHeader, StatCard, EmptyState, StatusBadge)
+- [x] Two layouts: site layout (navbar + footer) and dashboard layout (sidebar + topbar), see section 3.8
+- [x] Dashboard shell with data-driven nav per role
 
 ### Phase 2: Authentication
 - [ ] Register (name 3-10, strong password) then OTP verify-email
@@ -444,8 +444,8 @@ Rules:
 Full rules live in `AGENTS.md` (Definition of Done). After finishing ANY task, the agent must run the checks below, report each one as pass or fail, and fix failures before moving on. A task is not done until every item for its phase passes.
 
 ### Always (every task)
-- [ ] `pnpm biome check` and `pnpm tsc --noEmit` pass with zero errors
-- [ ] `pnpm build` succeeds
+- [ ] `npm run lint` (biome check) and `npm run typecheck` (tsc --noEmit) pass with zero errors
+- [ ] `npm run build` succeeds
 - [ ] No `any`, no unused code, no console logs
 - [ ] The page works at 375px, 768px and 1280px
 - [ ] Loading skeleton, empty state and error state each exist and were seen working

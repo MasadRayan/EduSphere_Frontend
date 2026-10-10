@@ -163,6 +163,86 @@ function toClientResponse(
   return response;
 }
 
+const ERROR_BODY_KEYS = [
+  "success",
+  "statusCode",
+  "message",
+  "data",
+  "errors",
+  "errorSources",
+  "errorDetails",
+] as const;
+
+/**
+ * Rewrites a backend error body to only the fields the UI needs. This stops
+ * internal details (stack traces, error names, filesystem paths) from reaching
+ * the browser while keeping the user-facing message and validation errors.
+ */
+function sanitizeErrorBody(raw: string, status: number): string {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    parsed = undefined;
+  }
+
+  const fallbackMessage =
+    status >= 500
+      ? "Something went wrong on our end. Please try again."
+      : "Request failed. Please check your input and try again.";
+
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    return JSON.stringify({
+      success: false,
+      statusCode: status,
+      message: fallbackMessage,
+      data: null,
+    });
+  }
+
+  const source = parsed as Record<string, unknown>;
+  const clean: Record<string, unknown> = {};
+  for (const key of ERROR_BODY_KEYS) {
+    if (key in source) {
+      clean[key] = source[key];
+    }
+  }
+  if (typeof clean.success !== "boolean") {
+    clean.success = false;
+  }
+  clean.statusCode = status;
+  if (typeof clean.message !== "string" || clean.message.length === 0) {
+    clean.message = fallbackMessage;
+  }
+  return JSON.stringify(clean);
+}
+
+function errorResponse(
+  raw: string,
+  status: number,
+  upstreamHeaders: Headers,
+  tokens?: AuthTokens,
+): NextResponse {
+  const headers = filterHeaders(upstreamHeaders, RESPONSE_STRIPPED);
+  headers.set("content-type", "application/json; charset=utf-8");
+  const response = new NextResponse(sanitizeErrorBody(raw, status), {
+    status,
+    headers,
+  });
+  if (tokens) {
+    setAuthCookiesOnResponse(response, tokens);
+  }
+  return response;
+}
+
+function parseMessage(raw: string): string | undefined {
+  try {
+    return (JSON.parse(raw) as { message?: string }).message;
+  } catch {
+    return undefined;
+  }
+}
+
 async function forwardWithRefresh(
   request: NextRequest,
   pathname: string,
@@ -170,39 +250,30 @@ async function forwardWithRefresh(
   let upstream = await forward(request, pathname);
   const status = upstream.status;
 
-  if (status !== 401 && status !== 403 && status !== 500) {
+  if (status < 400) {
     return toClientResponse(upstream);
   }
 
-  const raw = await upstream.text();
-  let message: string | undefined;
-  try {
-    message = (JSON.parse(raw) as { message?: string }).message;
-  } catch {
-    message = undefined;
+  if (status !== 401 && status !== 403 && status !== 500) {
+    const raw = await upstream.text();
+    return errorResponse(raw, status, upstream.headers);
   }
 
+  const raw = await upstream.text();
+  const message = parseMessage(raw);
   const kind = classifyAuthError(status, message);
   const cookies = parseCookie(request.headers.get("cookie"));
   const refreshToken = cookies[REFRESH_TOKEN_COOKIE];
-  const refreshCookieHeader = refreshToken
-    ? `${REFRESH_TOKEN_COOKIE}=${refreshToken}`
-    : "";
 
   if (kind !== "unauthenticated" || !refreshToken) {
-    return new NextResponse(raw, {
-      status,
-      headers: filterHeaders(upstream.headers, RESPONSE_STRIPPED),
-    });
+    return errorResponse(raw, status, upstream.headers);
   }
 
+  const refreshCookieHeader = `${REFRESH_TOKEN_COOKIE}=${refreshToken}`;
   const tokens = await requestRefresh(refreshCookieHeader);
 
   if (!tokens) {
-    const response = new NextResponse(raw, {
-      status: 401,
-      headers: { "content-type": "application/json" },
-    });
+    const response = errorResponse(raw, 401, upstream.headers);
     clearAuthCookiesOnResponse(response);
     return response;
   }
@@ -211,6 +282,16 @@ async function forwardWithRefresh(
   const init = buildInit(request, headers);
   const search = new URL(request.url).search;
   upstream = await fetch(`${BASE_URL}${pathname}${search}`, init);
+
+  if (upstream.status >= 400) {
+    const replayedRaw = await upstream.text();
+    return errorResponse(
+      replayedRaw,
+      upstream.status,
+      upstream.headers,
+      tokens,
+    );
+  }
 
   return toClientResponse(upstream, tokens);
 }
