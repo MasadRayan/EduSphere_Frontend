@@ -11,6 +11,7 @@ import type {
   CourseSection,
   GradeDetail,
   Payment,
+  RegisteredCourseDetail,
   Semester,
   SemesterEnrollment,
   StudentAnalytics,
@@ -91,8 +92,8 @@ export function getRegisteredCourses(): Promise<CourseRegistration[]> {
 
 export function getRegisteredCourseDetail(
   id: string,
-): Promise<CourseRegistration> {
-  return serverFetchData<CourseRegistration>(
+): Promise<RegisteredCourseDetail> {
+  return serverFetchData<RegisteredCourseDetail>(
     `${endpoints.student.registeredCourses}/${id}`,
   );
 }

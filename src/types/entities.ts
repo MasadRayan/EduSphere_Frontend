@@ -190,6 +190,32 @@ export interface CourseRegistration {
   registeredAt: string;
 }
 
+export interface CourseSectionExamWithResult {
+  id: string;
+  type: ExamType;
+  date: string;
+  totalMarks: number;
+  results?: {
+    id: string;
+    marksObtained: number | null;
+    grade: string | null;
+    gradePoint: number | null;
+  }[];
+}
+
+export interface RegisteredCourseAttendance {
+  id: string;
+  date: string;
+  status: AttendanceStatus;
+}
+
+export interface RegisteredCourseDetail extends CourseRegistration {
+  courseSection: CourseSection & {
+    exams?: CourseSectionExamWithResult[];
+    attendances?: RegisteredCourseAttendance[];
+  };
+}
+
 export interface SemesterEnrollment {
   id: string;
   studentId: string;
