@@ -1,4 +1,4 @@
-import { Suspense, type ReactNode } from "react";
+import { type ReactNode, Suspense } from "react";
 import { DashboardShell } from "@/components/shared/dashboard-shell";
 import { DashboardShellSkeleton } from "@/components/shared/dashboard-shell-skeleton";
 

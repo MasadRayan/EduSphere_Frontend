@@ -16,7 +16,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { NAV_BY_ROLE, ROLE_LABEL, type NavUser } from "@/lib/nav";
+import { NAV_BY_ROLE, type NavUser, ROLE_LABEL } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 import { AvatarWithFallback } from "./avatar-with-fallback";
 
@@ -42,7 +42,9 @@ export function AppSidebar({ user }: { user: NavUser }) {
             <GraduationCap className="size-4" aria-hidden="true" />
           </span>
           <span className="flex flex-col group-data-[collapsible=icon]:hidden">
-            <span className="font-display text-sm font-semibold">EduSphere</span>
+            <span className="font-display text-sm font-semibold">
+              EduSphere
+            </span>
             <span className="text-xs text-sidebar-foreground/70">
               {ROLE_LABEL[user.role]}
             </span>
@@ -83,11 +85,7 @@ export function AppSidebar({ user }: { user: NavUser }) {
             "group-data-[collapsible=icon]:justify-center",
           )}
         >
-          <AvatarWithFallback
-            name={user.name}
-            src={user.avatarUrl}
-            size="sm"
-          />
+          <AvatarWithFallback name={user.name} src={user.avatarUrl} size="sm" />
           <div className="flex min-w-0 flex-col group-data-[collapsible=icon]:hidden">
             <span className="truncate text-sm font-medium">{user.name}</span>
             <span className="truncate text-xs text-sidebar-foreground/70">

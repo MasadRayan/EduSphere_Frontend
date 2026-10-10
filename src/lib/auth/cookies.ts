@@ -1,19 +1,19 @@
 import "server-only";
-import { cookies } from "next/headers";
+import type { cookies } from "next/headers";
 import type { NextResponse } from "next/server";
 import type { AuthTokens } from "@/types/api";
 import {
   ACCESS_TOKEN_COOKIE,
   ACCESS_TOKEN_MAX_AGE,
+  authCookieOptions,
   REFRESH_TOKEN_COOKIE,
   REFRESH_TOKEN_MAX_AGE,
-  authCookieOptions,
 } from "./cookie-config";
 
 export {
   ACCESS_TOKEN_COOKIE,
-  REFRESH_TOKEN_COOKIE,
   ACCESS_TOKEN_MAX_AGE,
+  REFRESH_TOKEN_COOKIE,
   REFRESH_TOKEN_MAX_AGE,
 } from "./cookie-config";
 

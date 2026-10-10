@@ -1,12 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server";
-import {
-  clearAuthCookiesOnResponse,
-  setAuthCookiesOnResponse,
-  ACCESS_TOKEN_COOKIE,
-  REFRESH_TOKEN_COOKIE,
-} from "@/lib/auth/cookies";
-import { PROXY_ALLOWED_PREFIXES, endpoints } from "@/lib/api/endpoints";
+import { endpoints, PROXY_ALLOWED_PREFIXES } from "@/lib/api/endpoints";
 import { classifyAuthError } from "@/lib/api/errors";
+import {
+  ACCESS_TOKEN_COOKIE,
+  clearAuthCookiesOnResponse,
+  REFRESH_TOKEN_COOKIE,
+  setAuthCookiesOnResponse,
+} from "@/lib/auth/cookies";
 import type { ApiEnvelope, AuthTokens } from "@/types/api";
 
 const API_URL = process.env.API_URL;
@@ -83,7 +83,9 @@ function filterHeaders(source: Headers, stripped: Set<string>): Headers {
   return headers;
 }
 
-async function requestRefresh(cookieHeader: string): Promise<AuthTokens | null> {
+async function requestRefresh(
+  cookieHeader: string,
+): Promise<AuthTokens | null> {
   try {
     const response = await fetch(`${BASE_URL}${endpoints.auth.refreshToken}`, {
       method: "POST",
@@ -213,42 +215,27 @@ async function forwardWithRefresh(
   return toClientResponse(upstream, tokens);
 }
 
-export async function GET(
-  request: NextRequest,
-  context: ProxyContext,
-) {
+export async function GET(request: NextRequest, context: ProxyContext) {
   const { path } = await context.params;
   return handle(request, path);
 }
 
-export async function POST(
-  request: NextRequest,
-  context: ProxyContext,
-) {
+export async function POST(request: NextRequest, context: ProxyContext) {
   const { path } = await context.params;
   return handle(request, path);
 }
 
-export async function PUT(
-  request: NextRequest,
-  context: ProxyContext,
-) {
+export async function PUT(request: NextRequest, context: ProxyContext) {
   const { path } = await context.params;
   return handle(request, path);
 }
 
-export async function PATCH(
-  request: NextRequest,
-  context: ProxyContext,
-) {
+export async function PATCH(request: NextRequest, context: ProxyContext) {
   const { path } = await context.params;
   return handle(request, path);
 }
 
-export async function DELETE(
-  request: NextRequest,
-  context: ProxyContext,
-) {
+export async function DELETE(request: NextRequest, context: ProxyContext) {
   const { path } = await context.params;
   return handle(request, path);
 }

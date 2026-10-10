@@ -1,7 +1,11 @@
 import "server-only";
 import { cookies } from "next/headers";
-import { ofetch, type FetchOptions } from "ofetch";
-import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE, setAuthCookies } from "@/lib/auth/cookies";
+import { type FetchOptions, ofetch } from "ofetch";
+import {
+  ACCESS_TOKEN_COOKIE,
+  REFRESH_TOKEN_COOKIE,
+  setAuthCookies,
+} from "@/lib/auth/cookies";
 import type { ApiEnvelope, AuthTokens } from "@/types/api";
 import { endpoints } from "./endpoints";
 import { ApiError, classifyAuthError } from "./errors";
@@ -35,7 +39,9 @@ function upsertCookie(header: string, name: string, value: string): string {
   return parts.join("; ");
 }
 
-async function requestRefresh(cookieHeader: string): Promise<AuthTokens | null> {
+async function requestRefresh(
+  cookieHeader: string,
+): Promise<AuthTokens | null> {
   const response = await ofetch.raw<ApiEnvelope<AuthTokens>>(
     endpoints.auth.refreshToken,
     {

@@ -10,8 +10,8 @@ import {
   CreditCard,
   FileText,
   GraduationCap,
-  LayoutDashboard,
   Layers,
+  LayoutDashboard,
   type LucideIcon,
   Receipt,
   School,
@@ -70,7 +70,9 @@ const STUDENT_NAV: NavSection[] = [
   },
   {
     label: "Finance",
-    items: [{ label: "My payments", href: "/student/payments", icon: CreditCard }],
+    items: [
+      { label: "My payments", href: "/student/payments", icon: CreditCard },
+    ],
   },
 ];
 

@@ -3,9 +3,9 @@ import { endpoints } from "@/lib/api/endpoints";
 import {
   ACCESS_TOKEN_COOKIE,
   ACCESS_TOKEN_MAX_AGE,
+  authCookieOptions,
   REFRESH_TOKEN_COOKIE,
   REFRESH_TOKEN_MAX_AGE,
-  authCookieOptions,
 } from "@/lib/auth/cookie-config";
 import { safeNext } from "@/lib/auth/redirects";
 import { homePathForRole, isRole } from "@/lib/auth/role-paths";
@@ -31,7 +31,9 @@ function decodeJwtRole(token: string): Role | null {
   }
 }
 
-async function refreshSession(refreshToken: string): Promise<AuthTokens | null> {
+async function refreshSession(
+  refreshToken: string,
+): Promise<AuthTokens | null> {
   if (!API_URL) {
     return null;
   }

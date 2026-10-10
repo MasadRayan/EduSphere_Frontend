@@ -1,4 +1,9 @@
-import { ArrowRight, BookOpenCheck, CircleDollarSign, ClipboardPen } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpenCheck,
+  CircleDollarSign,
+  ClipboardPen,
+} from "lucide-react";
 import Link from "next/link";
 import { CourseCodeTag } from "@/components/shared/course-code-tag";
 import { Button } from "@/components/ui/button";

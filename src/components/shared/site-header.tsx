@@ -26,7 +26,9 @@ export async function SiteHeader() {
           <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <GraduationCap className="size-4" aria-hidden="true" />
           </span>
-          <span className="font-display text-base font-semibold">EduSphere</span>
+          <span className="font-display text-base font-semibold">
+            EduSphere
+          </span>
         </Link>
 
         <nav aria-label="Main" className="hidden items-center gap-1 md:flex">

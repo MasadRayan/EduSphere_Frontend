@@ -1,9 +1,4 @@
-export const ROLES = [
-  "STUDENT",
-  "INSTRUCTOR",
-  "ADMIN",
-  "SUPER_ADMIN",
-] as const;
+export const ROLES = ["STUDENT", "INSTRUCTOR", "ADMIN", "SUPER_ADMIN"] as const;
 export type Role = (typeof ROLES)[number];
 
 export const USER_STATUSES = ["ACTIVE", "BLOCKED", "DELETED"] as const;

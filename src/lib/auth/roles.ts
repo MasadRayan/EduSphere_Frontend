@@ -1,11 +1,11 @@
 import "server-only";
 import { redirect } from "next/navigation";
-import type { Role } from "@/types/enums";
 import type { SessionUser } from "@/types/entities";
+import type { Role } from "@/types/enums";
 import { homePathForRole } from "./role-paths";
 import { getSession } from "./session";
 
-export { ROLE_HOME, homePathForRole, isRole } from "./role-paths";
+export { homePathForRole, isRole, ROLE_HOME } from "./role-paths";
 
 /**
  * Layout-level guard. Every role segment calls this so a wrong role is

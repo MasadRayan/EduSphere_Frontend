@@ -1,4 +1,4 @@
-import { ofetch, type FetchOptions } from "ofetch";
+import { type FetchOptions, ofetch } from "ofetch";
 import type { ApiEnvelope } from "@/types/api";
 import { ApiError, classifyAuthError } from "./errors";
 

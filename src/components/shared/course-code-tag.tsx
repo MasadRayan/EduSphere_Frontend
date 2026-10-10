@@ -13,7 +13,7 @@ export function CourseCodeTag({
 }) {
   const barWidth =
     typeof credits === "number" && credits > 0
-      ? `${Math.min(credits, MAX_CREDIT_BAR) / MAX_CREDIT_BAR * 100}%`
+      ? `${(Math.min(credits, MAX_CREDIT_BAR) / MAX_CREDIT_BAR) * 100}%`
       : null;
 
   return (

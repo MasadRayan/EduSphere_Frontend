@@ -1,5 +1,6 @@
+import { Inbox } from "lucide-react";
 import type { Metadata } from "next";
-import { Inbox, Plus, Search } from "lucide-react";
+import type { ReactNode } from "react";
 import { AvatarWithFallback } from "@/components/shared/avatar-with-fallback";
 import { CourseCodeTag } from "@/components/shared/course-code-tag";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -12,21 +13,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -36,10 +23,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { ReactNode } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -60,18 +50,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "UI gallery",
   robots: { index: false, follow: false },
-} satisfies Metadata;
+};
 
-function Section({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="space-y-4">
       <h2 className="font-display text-lg font-semibold">{title}</h2>
@@ -83,13 +67,10 @@ function Section({
 export default function UiGalleryPage() {
   return (
     <div className="mx-auto w-full max-w-6xl space-y-10 px-4 py-10">
-      <div className="space-y-1">
-        <h1 className="font-display text-2xl font-semibold">UI gallery</h1>
-        <p className="text-sm text-muted-foreground">
-          Every shared building block in one place. Toggle the theme from the
-          header to check light and dark.
-        </p>
-      </div>
+      <PageHeader
+        title="UI gallery"
+        description="Every shared building block in one place. Toggle the theme from the header to check light and dark."
+      />
 
       <Section title="Buttons">
         <div className="flex flex-wrap items-center gap-2">
@@ -134,29 +115,19 @@ export default function UiGalleryPage() {
 
       <Section title="Cards and stats">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatCard label="CGPA" value="3.72" hint="Out of 4.00" />
+          <StatCard label="Credits" value="96" hint="140 required" />
+          <StatCard label="Attendance" value="88%" hint="This semester" />
           <Card>
             <CardHeader>
-              <CardTitle>Card title</CardTitle>
-              <CardDescription>A short supporting line.</CardDescription>
+              <CardTitle>Progress</CardTitle>
+              <CardDescription>Credits completed.</CardDescription>
             </CardHeader>
-            <CardContent>Card body content.</CardContent>
-          </Card>
-          <Card className="sm:col-span-1">
-            <CardContent className="space-y-3 pt-6">
+            <CardContent className="space-y-3">
               <Progress value={64} />
               <p className="text-sm text-muted-foreground">64% complete</p>
             </CardContent>
           </Card>
-          <div className="sm:col-span-2 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-xl border border-border bg-card p-4">
-              <p className="text-sm text-muted-foreground">CGPA</p>
-              <p className="font-mono text-2xl font-semibold">3.72</p>
-            </div>
-            <div className="rounded-xl border border-border bg-card p-4">
-              <p className="text-sm text-muted-foreground">Credits</p>
-              <p className="font-mono text-2xl font-semibold">96</p>
-            </div>
-          </div>
         </div>
       </Section>
 
@@ -244,38 +215,41 @@ export default function UiGalleryPage() {
       </Section>
 
       <Section title="Overlays">
-        <div className="flex flex-wrap items-center gap-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="outline">Hover me</Button>
-            </TooltipTrigger>
-            <TooltipContent>Tooltip content</TooltipContent>
-          </Tooltip>
-          <div>
-            <Button
-              variant="outline"
-              onClick={undefined}
-              render={undefined}
-              type="button"
-            >
-              Trigger
-            </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline">Hover for tooltip</Button>
+          </TooltipTrigger>
+          <TooltipContent>Tooltip content</TooltipContent>
+        </Tooltip>
+      </Section>
+
+      <Section title="Avatars and disclosure">
+        <div className="space-y-4">
+          <div className="flex items-center gap-4">
+            <AvatarWithFallback name="Ayesha Rahman" />
+            <Separator orientation="vertical" className="h-8" />
+            <p className="text-sm text-muted-foreground">
+              Avatars fall back to initials when there is no image.
+            </p>
           </div>
+          <Accordion type="single" collapsible className="max-w-lg">
+            <AccordionItem value="one">
+              <AccordionTrigger>How does enrollment work?</AccordionTrigger>
+              <AccordionContent>
+                Pick courses, pay with bKash, and your seats are confirmed.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </Section>
 
-      <Section title="Avatars and separators">
-        <div className="flex items-center gap-4">
-          <div className="rounded-full border border-border">
-            <span className="flex size-10 items-center justify-center rounded-full bg-muted text-sm text-muted-foreground">
-              AR
-            </span>
-          </div>
-          <Separator orientation="vertical" className="h-8" />
-          <p className="text-sm text-muted-foreground">
-            Avatars fall back to initials when there is no image.
-          </p>
-        </div>
+      <Section title="Empty state">
+        <EmptyState
+          icon={Inbox}
+          title="No enrollments yet"
+          description="Once you enroll in a semester, it will appear here."
+          action={<Button>Browse courses</Button>}
+        />
       </Section>
     </div>
   );
