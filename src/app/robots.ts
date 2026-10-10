@@ -11,6 +11,8 @@ export default function robots(): MetadataRoute.Robots {
         "/student",
         "/instructor",
         "/admin",
+        "/courses",
+        "/programs",
         "/login",
         "/register",
         "/verify-email",

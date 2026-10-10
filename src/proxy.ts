@@ -98,6 +98,8 @@ export const config = {
     "/student/:path*",
     "/instructor/:path*",
     "/admin/:path*",
+    "/courses/:path*",
+    "/programs/:path*",
     "/login",
     "/register",
     "/verify-email",
