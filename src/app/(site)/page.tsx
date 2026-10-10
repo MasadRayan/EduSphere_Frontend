@@ -11,6 +11,12 @@ import {
 import Link from "next/link";
 import { CourseCodeTag } from "@/components/shared/course-code-tag";
 import { StatusBadge } from "@/components/shared/status-badge";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 
 const HERO_COURSES = [
@@ -76,6 +82,33 @@ const ROLES = [
       "Programs and courses",
       "Payments and analytics",
     ],
+  },
+];
+
+const FAQS = [
+  {
+    q: "Is it free to apply?",
+    a: "Yes. Creating an account and submitting an application cost nothing. You only pay the semester fee after the registrar approves you and you enroll in courses.",
+  },
+  {
+    q: "How do I confirm my account?",
+    a: "We email a 6-digit code when you sign up. Enter it on the verification screen to activate your account and continue to your dashboard.",
+  },
+  {
+    q: "How many courses can I take in a term?",
+    a: "Up to 20. EduSphere checks seats, your credit load and prerequisites as you add each course, so you only confirm a valid schedule.",
+  },
+  {
+    q: "When is my seat confirmed?",
+    a: "When your bKash payment succeeds. Until then a course sits in your schedule as pending, and the seat is released if the fee is not paid before the deadline.",
+  },
+  {
+    q: "How do I pay the semester fee?",
+    a: "Through bKash from your dashboard. You can pay the full fee or a partial amount, and every transaction is recorded on your student ledger.",
+  },
+  {
+    q: "Where do I see my grades and transcript?",
+    a: "Attendance, exam results and your running CGPA are on your dashboard each term. Once results are published you can download a verifiable PDF transcript.",
   },
 ];
 
@@ -257,6 +290,42 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section id="faq" className="scroll-mt-20 border-b border-border">
+        <div className="mx-auto grid w-full max-w-7xl gap-12 px-4 py-16 md:py-24 lg:grid-cols-[0.85fr_1.15fr]">
+          <div className="space-y-4 self-start lg:sticky lg:top-24">
+            <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
+              Questions
+            </p>
+            <h2 className="font-display text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+              Answers before you enroll.
+            </h2>
+            <p className="max-w-md text-muted-foreground">
+              Everything about applying, paying and tracking your semester.
+              Still stuck? The registrar can help.
+            </p>
+            <Button asChild variant="outline">
+              <Link href="/contact">
+                Contact the registrar
+                <ArrowRight className="size-4" aria-hidden="true" />
+              </Link>
+            </Button>
+          </div>
+
+          <Accordion type="single" collapsible className="self-start">
+            {FAQS.map((faq, index) => (
+              <AccordionItem key={faq.q} value={`faq-${index}`}>
+                <AccordionTrigger className="items-center py-4 text-base hover:no-underline">
+                  {faq.q}
+                </AccordionTrigger>
+                <AccordionContent className="max-w-prose text-sm text-muted-foreground">
+                  {faq.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </section>
 
