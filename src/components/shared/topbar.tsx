@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { LogoutMenuItem } from "@/components/auth/logout";
 import { type NavUser, PROFILE_HREF_BY_ROLE, ROLE_LABEL } from "@/lib/nav";
 import { AvatarWithFallback } from "./avatar-with-fallback";
 import { ThemeToggle } from "./theme-toggle";
@@ -59,6 +60,8 @@ export function Topbar({ user }: { user: NavUser }) {
           <DropdownMenuItem asChild>
             <Link href="/">Back to site</Link>
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <LogoutMenuItem />
         </DropdownMenuContent>
       </DropdownMenu>
     </header>

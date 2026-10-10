@@ -2,34 +2,28 @@ import { type NextRequest, NextResponse } from "next/server";
 import { endpoints } from "@/lib/api/endpoints";
 import {
   ACCESS_TOKEN_COOKIE,
-  ACCESS_TOKEN_MAX_AGE,
   authCookieOptions,
+  ACCESS_TOKEN_MAX_AGE,
   REFRESH_TOKEN_COOKIE,
   REFRESH_TOKEN_MAX_AGE,
 } from "@/lib/auth/cookie-config";
-import { safeNext } from "@/lib/auth/redirects";
-import { homePathForRole, isRole } from "@/lib/auth/role-paths";
+import { decodeRoleFromAccessToken } from "@/lib/auth/jwt";
+import { homePathForRole } from "@/lib/auth/role-paths";
 import type { ApiEnvelope, AuthTokens } from "@/types/api";
-import type { Role } from "@/types/enums";
 
 const API_URL = process.env.API_URL;
 
-const AUTH_PAGES = new Set(["/login", "/register"]);
-
-function decodeJwtRole(token: string): Role | null {
-  const segments = token.split(".");
-  if (segments.length < 2) {
-    return null;
-  }
-  try {
-    const payload = JSON.parse(
-      Buffer.from(segments[1], "base64url").toString("utf8"),
-    ) as { role?: unknown };
-    return isRole(payload.role) ? payload.role : null;
-  } catch {
-    return null;
-  }
-}
+/**
+ * Pages that only make sense to a signed-out visitor. A visitor with an access
+ * token is bounced to their role dashboard instead.
+ */
+const AUTH_PAGES = new Set([
+  "/login",
+  "/register",
+  "/verify-email",
+  "/forgot-password",
+  "/reset-password",
+]);
 
 async function refreshSession(
   refreshToken: string,
@@ -58,14 +52,14 @@ async function refreshSession(
 }
 
 export async function proxy(request: NextRequest) {
-  const { pathname, search } = request.nextUrl;
+  const { pathname } = request.nextUrl;
   const accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
   const refreshToken = request.cookies.get(REFRESH_TOKEN_COOKIE)?.value;
   const isAuthPage = AUTH_PAGES.has(pathname);
 
   if (accessToken) {
     if (isAuthPage) {
-      const role = decodeJwtRole(accessToken);
+      const role = decodeRoleFromAccessToken(accessToken);
       const destination = role ? homePathForRole(role) : "/";
       return NextResponse.redirect(new URL(destination, request.url));
     }
@@ -95,10 +89,7 @@ export async function proxy(request: NextRequest) {
   }
 
   const loginUrl = new URL("/login", request.url);
-  const next = safeNext(`${pathname}${search}`);
-  if (next) {
-    loginUrl.searchParams.set("next", next);
-  }
+  loginUrl.searchParams.set("next", `${pathname}${request.nextUrl.search}`);
   return NextResponse.redirect(loginUrl);
 }
 
@@ -109,5 +100,8 @@ export const config = {
     "/admin/:path*",
     "/login",
     "/register",
+    "/verify-email",
+    "/forgot-password",
+    "/reset-password",
   ],
 };

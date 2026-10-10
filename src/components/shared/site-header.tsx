@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { homePathForRole } from "@/lib/auth/role-paths";
 import { getSession } from "@/lib/auth/session";
+import { AccountMenu } from "./account-menu";
 import { MobileNav } from "./mobile-nav";
 import { ThemeToggle } from "./theme-toggle";
 
@@ -46,9 +47,12 @@ export async function SiteHeader() {
         <div className="flex items-center gap-2 justify-self-end">
           <ThemeToggle />
           {session ? (
-            <Button asChild size="sm" className="hidden md:inline-flex">
-              <Link href={accountHref}>Go to dashboard</Link>
-            </Button>
+            <AccountMenu
+              name={session.name}
+              email={session.email}
+              avatarUrl={session.avatarUrl}
+              dashboardHref={accountHref}
+            />
           ) : (
             <>
               <Button
@@ -69,6 +73,7 @@ export async function SiteHeader() {
             accountHref={accountHref}
             accountLabel={accountLabel}
             showAuthActions={!session}
+            isAuthenticated={Boolean(session)}
           />
         </div>
       </div>

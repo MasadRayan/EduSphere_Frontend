@@ -12,17 +12,20 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { LogoutButton } from "@/components/auth/logout";
 
 export function MobileNav({
   links,
   accountHref,
   accountLabel,
   showAuthActions,
+  isAuthenticated,
 }: {
   links: { label: string; href: string }[];
   accountHref: string;
   accountLabel: string;
   showAuthActions: boolean;
+  isAuthenticated: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -66,9 +69,14 @@ export function MobileNav({
               </Button>
             </>
           ) : (
-            <Button asChild onClick={() => setOpen(false)}>
-              <Link href={accountHref}>{accountLabel}</Link>
-            </Button>
+            <>
+              <Button asChild onClick={() => setOpen(false)}>
+                <Link href={accountHref}>{accountLabel}</Link>
+              </Button>
+              {isAuthenticated ? (
+                <LogoutButton className="w-full" />
+              ) : null}
+            </>
           )}
         </SheetFooter>
       </SheetContent>

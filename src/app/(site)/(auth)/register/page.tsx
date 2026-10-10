@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { RegisterForm } from "@/components/auth/register-form";
 import {
   Card,
   CardContent,
@@ -18,20 +18,19 @@ export default function RegisterPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-display text-xl">Create account</CardTitle>
+        <CardTitle className="font-display text-2xl">Create account</CardTitle>
         <CardDescription>
-          Register as a student or instructor, then verify your email. This form
-          is delivered in Phase 2 (Authentication).
+          Register as a student or instructor, then verify your email.
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-3">
-        <Button disabled>Create account</Button>
-        <p className="text-sm text-muted-foreground">
-          Already registered?{" "}
-          <Link href="/login" className="text-primary hover:underline">
-            Log in
-          </Link>
-        </p>
+      <CardContent>
+        <RegisterForm />
+      </CardContent>
+      <CardContent className="pt-0 text-sm text-muted-foreground">
+        Already registered?{" "}
+        <Link href="/login" className="text-primary hover:underline">
+          Log in
+        </Link>
       </CardContent>
     </Card>
   );
