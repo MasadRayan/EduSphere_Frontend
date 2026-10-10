@@ -51,6 +51,20 @@ async function refreshSession(
   }
 }
 
+/**
+ * Forwards the current path to Server Components as a request header so
+ * layouts can make routing decisions (for example the student approval gate)
+ * without a client round trip.
+ */
+function nextWithPathname(
+  request: NextRequest,
+  pathname: string,
+): NextResponse {
+  const headers = new Headers(request.headers);
+  headers.set("x-pathname", pathname);
+  return NextResponse.next({ request: { headers } });
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
@@ -63,7 +77,7 @@ export async function proxy(request: NextRequest) {
       const destination = role ? homePathForRole(role) : "/";
       return NextResponse.redirect(new URL(destination, request.url));
     }
-    return NextResponse.next();
+    return nextWithPathname(request, pathname);
   }
 
   if (isAuthPage) {
@@ -73,7 +87,7 @@ export async function proxy(request: NextRequest) {
   if (refreshToken) {
     const tokens = await refreshSession(refreshToken);
     if (tokens) {
-      const response = NextResponse.next();
+      const response = nextWithPathname(request, pathname);
       response.cookies.set(
         ACCESS_TOKEN_COOKIE,
         tokens.accessToken,

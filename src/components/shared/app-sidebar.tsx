@@ -16,7 +16,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { NAV_BY_ROLE, type NavUser, ROLE_LABEL } from "@/lib/nav";
+import { type NavUser, navForUser, ROLE_LABEL } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 import { AvatarWithFallback } from "./avatar-with-fallback";
 
@@ -27,9 +27,15 @@ function isActivePath(pathname: string, href: string): boolean {
   return pathname.startsWith(`${href}/`);
 }
 
-export function AppSidebar({ user }: { user: NavUser }) {
+export function AppSidebar({
+  user,
+  gated = false,
+}: {
+  user: NavUser;
+  gated?: boolean;
+}) {
   const pathname = usePathname();
-  const sections = NAV_BY_ROLE[user.role];
+  const sections = navForUser(user, gated);
 
   return (
     <Sidebar collapsible="icon">

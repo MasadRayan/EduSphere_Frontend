@@ -13,6 +13,8 @@ export async function DashboardShell({ children }: { children: ReactNode }) {
     redirect("/login");
   }
 
+  const gated = session.role === "STUDENT" && !session.studentProfile;
+
   const user: NavUser = {
     name: session.name,
     email: session.email,
@@ -22,7 +24,7 @@ export async function DashboardShell({ children }: { children: ReactNode }) {
 
   return (
     <SidebarProvider>
-      <AppSidebar user={user} />
+      <AppSidebar user={user} gated={gated} />
       <SidebarInset>
         <Topbar user={user} />
         <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">{children}</div>

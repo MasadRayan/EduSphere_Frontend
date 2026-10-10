@@ -5,7 +5,7 @@ import { useActionState, useState } from "react";
 import { FormError } from "@/components/auth/form-error";
 import { PasswordField } from "@/components/auth/form-field";
 import { PasswordRules } from "@/components/auth/password-rules";
-import { SubmitButton } from "@/components/auth/submit-button";
+import { SubmitButton } from "@/components/shared/submit-button";
 import {
   Field,
   FieldDescription,

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { FormError } from "@/components/auth/form-error";
 import { TextField } from "@/components/auth/form-field";
-import { SubmitButton } from "@/components/auth/submit-button";
+import { SubmitButton } from "@/components/shared/submit-button";
 import { useActionToast } from "@/hooks/use-action-toast";
 import { forgotPasswordAction } from "@/lib/auth/actions";
 

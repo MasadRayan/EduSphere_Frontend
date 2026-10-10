@@ -12,16 +12,17 @@ export const APPLICATION_STATUSES = [
 export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number];
 
 export const ENROLLMENT_STATUSES = [
+  "PENDING",
   "ENROLLED",
-  "COMPLETED",
   "CANCELLED",
 ] as const;
 export type EnrollmentStatus = (typeof ENROLLMENT_STATUSES)[number];
 
 export const REGISTRATION_STATUSES = [
+  "PENDING",
   "ENROLLED",
-  "COMPLETED",
   "CANCELLED",
+  "COMPLETED",
 ] as const;
 export type RegistrationStatus = (typeof REGISTRATION_STATUSES)[number];
 
@@ -41,8 +42,25 @@ export const PAYMENT_PURPOSES = [
 ] as const;
 export type PaymentPurpose = (typeof PAYMENT_PURPOSES)[number];
 
-export const ATTENDANCE_STATUSES = ["PRESENT", "ABSENT", "LATE"] as const;
+export const ATTENDANCE_STATUSES = [
+  "PRESENT",
+  "ABSENT",
+  "LATE",
+  "EXCUSED",
+] as const;
 export type AttendanceStatus = (typeof ATTENDANCE_STATUSES)[number];
+
+export const STUDENT_STATUSES = [
+  "PENDING",
+  "ACTIVE",
+  "INACTIVE",
+  "GRADUATED",
+  "DROPPED_OUT",
+] as const;
+export type StudentStatus = (typeof STUDENT_STATUSES)[number];
+
+export const EXAM_TYPES = ["MIDTERM", "FINAL", "QUIZ", "ASSIGNMENT"] as const;
+export type ExamType = (typeof EXAM_TYPES)[number];
 
 export const AUTH_PROVIDERS = ["CREDENTIAL", "GOOGLE"] as const;
 export type AuthProvider = (typeof AUTH_PROVIDERS)[number];

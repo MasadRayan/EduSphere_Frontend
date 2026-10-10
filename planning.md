@@ -343,9 +343,9 @@ The **course code tag**: a mono code in a bordered tag, used on every course car
 
 ### Phase 4: Student Dashboard
 - [ ] Analytics dashboard (CGPA, credits, attendance %, grade breakdown, spend) with recharts
-- [ ] Enrollment application (apply, view status, edit and resubmit when pending or rejected)
-- [ ] Gating UI for pending/rejected applicants
-- [ ] Profile update and avatar upload
+- [x] Enrollment application (apply, view status, edit and resubmit when pending or rejected)
+- [x] Gating UI for pending/rejected applicants
+- [x] Profile update and avatar upload
 - [ ] Course picker (max 20, credit limit feedback, prerequisite errors shown per course) then Enroll
 - [ ] bKash redirect, `payment-result` page (success and failure states, link to enrollment)
 - [ ] My enrollments (filter by status/semester), cancel with refund confirmation

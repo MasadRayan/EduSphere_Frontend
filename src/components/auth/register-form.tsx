@@ -5,7 +5,7 @@ import { FormError } from "@/components/auth/form-error";
 import { PasswordField, TextField } from "@/components/auth/form-field";
 import { GoogleLogin } from "@/components/auth/google-login";
 import { PasswordRules } from "@/components/auth/password-rules";
-import { SubmitButton } from "@/components/auth/submit-button";
+import { SubmitButton } from "@/components/shared/submit-button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import {
   NativeSelect,

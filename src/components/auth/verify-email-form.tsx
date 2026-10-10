@@ -3,7 +3,7 @@
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { useActionState, useState } from "react";
 import { FormError } from "@/components/auth/form-error";
-import { SubmitButton } from "@/components/auth/submit-button";
+import { SubmitButton } from "@/components/shared/submit-button";
 import {
   Field,
   FieldDescription,

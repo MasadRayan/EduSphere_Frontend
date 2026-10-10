@@ -163,12 +163,29 @@ const ADMIN_NAV: NavSection[] = [
   },
 ];
 
+const GATED_STUDENT_NAV: NavSection[] = [
+  {
+    label: "Admission",
+    items: [
+      { label: "My application", href: "/student/apply", icon: FileText },
+      { label: "My profile", href: "/student/profile", icon: UserRound },
+    ],
+  },
+];
+
 export const NAV_BY_ROLE: Record<Role, NavSection[]> = {
   STUDENT: STUDENT_NAV,
   INSTRUCTOR: INSTRUCTOR_NAV,
   ADMIN: ADMIN_NAV,
   SUPER_ADMIN: ADMIN_NAV,
 };
+
+export function navForUser(user: NavUser, gated = false): NavSection[] {
+  if (user.role === "STUDENT" && gated) {
+    return GATED_STUDENT_NAV;
+  }
+  return NAV_BY_ROLE[user.role];
+}
 
 export const PROFILE_HREF_BY_ROLE: Partial<Record<Role, string>> = {
   STUDENT: "/student/profile",
