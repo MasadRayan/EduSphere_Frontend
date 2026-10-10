@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import type { ZodError } from "zod";
 import { ApiError } from "@/lib/api/errors";
+import { setFlash } from "@/lib/flash";
 import type { ActionResult } from "@/types/api";
 import {
   authCookieOptions,
@@ -95,6 +96,11 @@ export async function registerAction(
     parsed.data.email,
     authCookieOptions(PENDING_EMAIL_MAX_AGE),
   );
+  setFlash(store, {
+    type: "success",
+    message: "Account created",
+    description: "Enter the 6-digit code we emailed you.",
+  });
   redirect("/verify-email");
 }
 
@@ -135,6 +141,12 @@ export async function verifyEmailAction(
   });
   store.delete(PENDING_EMAIL_COOKIE);
 
+  setFlash(store, {
+    type: "success",
+    message: "Email verified",
+    description: "Welcome to EduSphere.",
+  });
+
   const next = safeNext(readString(formData.get("next")));
   redirect(next ?? homePathForRole(payload.user.role));
 }
@@ -172,6 +184,12 @@ export async function loginAction(
   const store = await cookies();
   setAuthCookies(store, tokens);
 
+  setFlash(store, {
+    type: "success",
+    message: "Signed in successfully",
+    description: "Welcome back to EduSphere.",
+  });
+
   const role = decodeRoleFromAccessToken(tokens.accessToken);
   const next = safeNext(readString(formData.get("next")));
   redirect(next ?? (role ? homePathForRole(role) : "/"));
@@ -198,6 +216,12 @@ export async function googleLoginAction(
 
   const store = await cookies();
   setAuthCookies(store, tokens);
+
+  setFlash(store, {
+    type: "success",
+    message: "Signed in with Google",
+    description: "Welcome back to EduSphere.",
+  });
 
   const role = decodeRoleFromAccessToken(tokens.accessToken);
   const target = safeNext(next);
@@ -236,6 +260,11 @@ export async function forgotPasswordAction(
   store.set(PENDING_EMAIL_COOKIE, parsed.data.email, {
     ...authCookieOptions(PENDING_EMAIL_MAX_AGE),
   });
+  setFlash(store, {
+    type: "success",
+    message: "Reset code sent",
+    description: `We emailed a 6-digit code to ${parsed.data.email}.`,
+  });
   redirect("/reset-password");
 }
 
@@ -271,11 +300,17 @@ export async function resetPasswordAction(
 
   const store = await cookies();
   store.delete(PENDING_EMAIL_COOKIE);
-  redirect("/login?reset=1");
+  setFlash(store, {
+    type: "success",
+    message: "Password updated",
+    description: "Log in with your new password.",
+  });
+  redirect("/login");
 }
 
 export async function logoutAction(): Promise<void> {
   const store = await cookies();
   clearAuthCookies(store);
+  setFlash(store, { type: "success", message: "Signed out" });
   redirect("/");
 }

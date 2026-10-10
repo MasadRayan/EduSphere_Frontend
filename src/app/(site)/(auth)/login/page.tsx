@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description: "Log in to your EduSphere account.",
 };
 
-type LoginSearchParams = Promise<{ next?: string; reset?: string }>;
+type LoginSearchParams = Promise<{ next?: string }>;
 
 async function LoginSection({
   searchParams,
@@ -26,9 +26,8 @@ async function LoginSection({
 }) {
   const params = await searchParams;
   const next = safeNext(typeof params.next === "string" ? params.next : null);
-  const justReset = params.reset === "1";
 
-  return <LoginForm next={next} justReset={justReset} />;
+  return <LoginForm next={next} />;
 }
 
 export default function LoginPage({

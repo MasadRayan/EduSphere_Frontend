@@ -17,6 +17,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { useActionToast } from "@/hooks/use-action-toast";
 import { resetPasswordAction } from "@/lib/auth/actions";
 
 const OTP_SLOTS = [0, 1, 2, 3, 4, 5];
@@ -26,6 +27,7 @@ export function ResetPasswordForm({ email }: { email: string }) {
   const [password, setPassword] = useState("");
   const [state, formAction] = useActionState(resetPasswordAction, undefined);
   const fieldErrors = state && !state.ok ? state.fieldErrors : undefined;
+  useActionToast(state);
 
   return (
     <form action={formAction} className="flex flex-col gap-5">

@@ -51,6 +51,7 @@ export function ContactForm({ to }: { to: string }) {
     const nextErrors = validate(values);
     setErrors(nextErrors);
     if (Object.values(nextErrors).some(Boolean)) {
+      toast.error("Check the highlighted fields and try again.");
       return;
     }
 

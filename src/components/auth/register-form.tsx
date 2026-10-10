@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import { FormError } from "@/components/auth/form-error";
 import { PasswordField, TextField } from "@/components/auth/form-field";
-import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
+import { GoogleLogin } from "@/components/auth/google-login";
 import { PasswordRules } from "@/components/auth/password-rules";
 import { SubmitButton } from "@/components/auth/submit-button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
@@ -11,12 +11,14 @@ import {
   NativeSelect,
   NativeSelectOption,
 } from "@/components/ui/native-select";
+import { useActionToast } from "@/hooks/use-action-toast";
 import { registerAction } from "@/lib/auth/actions";
 
 export function RegisterForm() {
   const [password, setPassword] = useState("");
   const [state, formAction] = useActionState(registerAction, undefined);
   const fieldErrors = state && !state.ok ? state.fieldErrors : undefined;
+  useActionToast(state);
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
@@ -75,7 +77,7 @@ export function RegisterForm() {
       <SubmitButton className="w-full" pendingLabel="Creating account...">
         Create account
       </SubmitButton>
-      <GoogleSignInButton />
+      <GoogleLogin />
     </form>
   );
 }

@@ -15,6 +15,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { useActionToast } from "@/hooks/use-action-toast";
 import { verifyEmailAction } from "@/lib/auth/actions";
 
 const OTP_SLOTS = [0, 1, 2, 3, 4, 5];
@@ -29,6 +30,7 @@ export function VerifyEmailForm({
   const [otp, setOtp] = useState("");
   const [state, formAction] = useActionState(verifyEmailAction, undefined);
   const fieldErrors = state && !state.ok ? state.fieldErrors : undefined;
+  useActionToast(state);
 
   return (
     <form action={formAction} className="flex flex-col gap-5">

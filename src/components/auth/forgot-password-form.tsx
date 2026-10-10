@@ -5,11 +5,13 @@ import { useActionState } from "react";
 import { FormError } from "@/components/auth/form-error";
 import { TextField } from "@/components/auth/form-field";
 import { SubmitButton } from "@/components/auth/submit-button";
+import { useActionToast } from "@/hooks/use-action-toast";
 import { forgotPasswordAction } from "@/lib/auth/actions";
 
 export function ForgotPasswordForm() {
   const [state, formAction] = useActionState(forgotPasswordAction, undefined);
   const fieldErrors = state && !state.ok ? state.fieldErrors : undefined;
+  useActionToast(state);
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
