@@ -5,6 +5,7 @@ import type { PaginationMeta, PaymentsMeta } from "@/types/api";
 import type {
   AttendanceGroup,
   CgpaResult,
+  Course,
   CourseGrade,
   CourseRegistration,
   CourseSection,
@@ -182,5 +183,19 @@ export async function listOfferedSections(
       query: { semesterId, limit: "100" },
     },
   );
+  return envelope.data;
+}
+
+export async function getActiveSemester(): Promise<Semester | null> {
+  const envelope = await serverFetch<Semester[]>(endpoints.semesters, {
+    query: { isActive: "true", limit: "1" },
+  });
+  return envelope.data[0] ?? null;
+}
+
+export async function listEnrollCourses(): Promise<Course[]> {
+  const envelope = await serverFetch<Course[]>(endpoints.courses, {
+    query: { limit: "100" },
+  });
   return envelope.data;
 }

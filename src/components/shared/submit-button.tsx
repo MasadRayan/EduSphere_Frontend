@@ -9,6 +9,7 @@ export function SubmitButton({
   children,
   pendingLabel,
   className,
+  disabled,
   ...props
 }: React.ComponentProps<typeof Button> & {
   pendingLabel?: string;
@@ -16,7 +17,12 @@ export function SubmitButton({
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" disabled={pending} className={className} {...props}>
+    <Button
+      type="submit"
+      disabled={pending || disabled}
+      className={className}
+      {...props}
+    >
       {pending ? (
         <Loader2 className="size-4 animate-spin" aria-hidden="true" />
       ) : null}

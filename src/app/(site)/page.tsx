@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { CourseCodeTag } from "@/components/shared/course-code-tag";
 import { StatusBadge } from "@/components/shared/status-badge";
 import {
@@ -124,7 +125,29 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const params = await searchParams;
+  const payment = Array.isArray(params.payment)
+    ? params.payment[0]
+    : params.payment;
+
+  // The bKash callback lands here. Surface the result on the payment-result
+  // page so a student sees a clear success or failure state.
+  if (payment === "success" || payment === "failed") {
+    const query = new URLSearchParams();
+    for (const [key, value] of Object.entries(params)) {
+      const text = Array.isArray(value) ? value.join(",") : value;
+      if (text !== undefined) {
+        query.set(key, text);
+      }
+    }
+    redirect(`/student/payment-result?${query.toString()}`);
+  }
+
   return (
     <div className="flex flex-col">
       <section className="relative isolate overflow-hidden border-b border-border">

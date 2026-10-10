@@ -346,8 +346,8 @@ The **course code tag**: a mono code in a bordered tag, used on every course car
 - [x] Enrollment application (apply, view status, edit and resubmit when pending or rejected)
 - [x] Gating UI for pending/rejected applicants
 - [x] Profile update and avatar upload
-- [ ] Course picker (max 20, credit limit feedback, prerequisite errors shown per course) then Enroll
-- [ ] bKash redirect, `payment-result` page (success and failure states, link to enrollment)
+- [x] Course picker (max 20, credit limit feedback, prerequisite errors shown per course) then Enroll
+- [x] bKash redirect, `payment-result` page (success and failure states, link to enrollment)
 - [ ] My enrollments (filter by status/semester), cancel with refund confirmation
 - [ ] My payments
 - [ ] Registered courses and details
