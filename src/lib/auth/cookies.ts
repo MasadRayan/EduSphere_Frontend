@@ -2,24 +2,22 @@ import "server-only";
 import { cookies } from "next/headers";
 import type { NextResponse } from "next/server";
 import type { AuthTokens } from "@/types/api";
+import {
+  ACCESS_TOKEN_COOKIE,
+  ACCESS_TOKEN_MAX_AGE,
+  REFRESH_TOKEN_COOKIE,
+  REFRESH_TOKEN_MAX_AGE,
+  authCookieOptions,
+} from "./cookie-config";
 
-export const ACCESS_TOKEN_COOKIE = "accessToken";
-export const REFRESH_TOKEN_COOKIE = "refreshToken";
-
-export const ACCESS_TOKEN_MAX_AGE = 60 * 60 * 24;
-export const REFRESH_TOKEN_MAX_AGE = 60 * 60 * 24 * 7;
+export {
+  ACCESS_TOKEN_COOKIE,
+  REFRESH_TOKEN_COOKIE,
+  ACCESS_TOKEN_MAX_AGE,
+  REFRESH_TOKEN_MAX_AGE,
+} from "./cookie-config";
 
 type CookieStore = Awaited<ReturnType<typeof cookies>>;
-
-function authCookieOptions(maxAge: number) {
-  return {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax" as const,
-    path: "/",
-    maxAge,
-  };
-}
 
 export function getAccessToken(store: CookieStore): string | undefined {
   return store.get(ACCESS_TOKEN_COOKIE)?.value;

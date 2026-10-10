@@ -15,7 +15,7 @@ if (!API_URL) {
 const BASE_URL: string = API_URL;
 
 export type ServerFetchOptions = Omit<
-  FetchOptions,
+  FetchOptions<"json">,
   "baseURL" | "headers" | "retry"
 > & {
   headers?: Record<string, string>;

@@ -13,16 +13,19 @@ export const apiClient = ofetch.create({
   retry: 0,
 });
 
-export type ClientFetchOptions = Omit<FetchOptions, "baseURL" | "retry">;
+export type ClientFetchOptions = Omit<
+  FetchOptions<"json">,
+  "baseURL" | "retry"
+>;
 
 export async function clientFetch<T>(
   path: string,
   options: ClientFetchOptions = {},
 ): Promise<ApiEnvelope<T>> {
-  let response: Awaited<ReturnType<typeof apiClient.raw<T>>>;
+  let response: Awaited<ReturnType<typeof apiClient.raw<ApiEnvelope<T>>>>;
 
   try {
-    response = await apiClient.raw<T>(path, options);
+    response = await apiClient.raw<ApiEnvelope<T>>(path, options);
   } catch {
     throw new ApiError(
       "We could not reach the server. Please try again.",

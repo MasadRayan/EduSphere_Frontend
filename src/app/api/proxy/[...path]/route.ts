@@ -17,6 +17,10 @@ if (!API_URL) {
 
 const BASE_URL: string = API_URL;
 
+interface ProxyContext {
+  params: Promise<{ path: string[] }>;
+}
+
 const HOP_BY_HOP = new Set([
   "connection",
   "keep-alive",
@@ -211,7 +215,7 @@ async function forwardWithRefresh(
 
 export async function GET(
   request: NextRequest,
-  context: RouteContext<"/api/proxy/[...path]">,
+  context: ProxyContext,
 ) {
   const { path } = await context.params;
   return handle(request, path);
@@ -219,7 +223,7 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  context: RouteContext<"/api/proxy/[...path]">,
+  context: ProxyContext,
 ) {
   const { path } = await context.params;
   return handle(request, path);
@@ -227,7 +231,7 @@ export async function POST(
 
 export async function PUT(
   request: NextRequest,
-  context: RouteContext<"/api/proxy/[...path]">,
+  context: ProxyContext,
 ) {
   const { path } = await context.params;
   return handle(request, path);
@@ -235,7 +239,7 @@ export async function PUT(
 
 export async function PATCH(
   request: NextRequest,
-  context: RouteContext<"/api/proxy/[...path]">,
+  context: ProxyContext,
 ) {
   const { path } = await context.params;
   return handle(request, path);
@@ -243,7 +247,7 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  context: RouteContext<"/api/proxy/[...path]">,
+  context: ProxyContext,
 ) {
   const { path } = await context.params;
   return handle(request, path);
