@@ -28,9 +28,7 @@ export default async function LoginPage({
     <Card>
       <CardHeader>
         <CardTitle className="font-display text-2xl">Welcome back</CardTitle>
-        <CardDescription>
-          Log in to continue to your dashboard.
-        </CardDescription>
+        <CardDescription>Log in to continue to your dashboard.</CardDescription>
       </CardHeader>
       <CardContent>
         <LoginForm next={next} justReset={justReset} />

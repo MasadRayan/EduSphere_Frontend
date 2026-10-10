@@ -3,6 +3,7 @@
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { LogoutButton } from "@/components/auth/logout";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -12,7 +13,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { LogoutButton } from "@/components/auth/logout";
 
 export function MobileNav({
   links,
@@ -73,9 +73,7 @@ export function MobileNav({
               <Button asChild onClick={() => setOpen(false)}>
                 <Link href={accountHref}>{accountLabel}</Link>
               </Button>
-              {isAuthenticated ? (
-                <LogoutButton className="w-full" />
-              ) : null}
+              {isAuthenticated ? <LogoutButton className="w-full" /> : null}
             </>
           )}
         </SheetFooter>

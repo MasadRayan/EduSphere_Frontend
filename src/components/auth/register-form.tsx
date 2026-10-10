@@ -6,11 +6,7 @@ import { PasswordField, TextField } from "@/components/auth/form-field";
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
 import { PasswordRules } from "@/components/auth/password-rules";
 import { SubmitButton } from "@/components/auth/submit-button";
-import {
-  Field,
-  FieldError,
-  FieldLabel,
-} from "@/components/ui/field";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import {
   NativeSelect,
   NativeSelectOption,

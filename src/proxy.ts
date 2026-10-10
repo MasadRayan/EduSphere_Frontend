@@ -2,8 +2,8 @@ import { type NextRequest, NextResponse } from "next/server";
 import { endpoints } from "@/lib/api/endpoints";
 import {
   ACCESS_TOKEN_COOKIE,
-  authCookieOptions,
   ACCESS_TOKEN_MAX_AGE,
+  authCookieOptions,
   REFRESH_TOKEN_COOKIE,
   REFRESH_TOKEN_MAX_AGE,
 } from "@/lib/auth/cookie-config";

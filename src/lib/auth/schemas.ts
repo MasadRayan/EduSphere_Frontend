@@ -22,10 +22,7 @@ export const passwordSchema = z
   .regex(/[0-9]/, "Add at least one number")
   .regex(SPECIAL_CHARACTER, "Add at least one special character");
 
-export const otpSchema = z
-  .string()
-  .trim()
-  .length(6, "Enter the 6 digit code");
+export const otpSchema = z.string().trim().length(6, "Enter the 6 digit code");
 
 export const REGISTER_ROLES = ["STUDENT", "INSTRUCTOR"] as const;
 

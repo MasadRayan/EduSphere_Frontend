@@ -1,7 +1,7 @@
 "use client";
 
-import { Check, X } from "lucide-react";
 import { cn } from "cn";
+import { Check, X } from "lucide-react";
 
 const RULES: { label: string; test: (value: string) => boolean }[] = [
   { label: "8+ characters", test: (value) => value.length >= 8 },

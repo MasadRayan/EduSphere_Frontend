@@ -1,14 +1,4 @@
-import { AUTH_ERROR_COPY, type AuthFailureKind } from "@/lib/api/errors";
-
-const AUTH_FAILURE_KIND_BY_MESSAGE: Record<string, keyof typeof AUTH_ERROR_COPY> =
-  {
-    "your account is blocked. please contact the administration.": "blocked",
-    "you are not logged in. please log in to access this resource.":
-      "unauthenticated",
-    "forbidden. you don't have permission to access this resource.": "forbidden",
-    "user is deleted. please contact support.": "deleted",
-    "user credentials mismatch. please log in again.": "credentials",
-  };
+import { AUTH_ERROR_COPY } from "@/lib/api/errors";
 
 const AUTH_MESSAGE_MAP: Record<string, string> = {
   "user is blocked": AUTH_ERROR_COPY.blocked,

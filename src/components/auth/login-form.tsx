@@ -8,7 +8,6 @@ import { PasswordField, TextField } from "@/components/auth/form-field";
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
 import { SubmitButton } from "@/components/auth/submit-button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { FieldSeparator } from "@/components/ui/field";
 import { loginAction } from "@/lib/auth/actions";
 
 export function LoginForm({

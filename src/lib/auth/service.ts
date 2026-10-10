@@ -60,9 +60,7 @@ export async function forgotPassword(
   });
 }
 
-export async function resetPassword(
-  input: ResetPasswordInput,
-): Promise<void> {
+export async function resetPassword(input: ResetPasswordInput): Promise<void> {
   await serverFetch<null>(endpoints.auth.resetPassword, {
     method: "POST",
     body: input,

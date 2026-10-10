@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import { VerifyEmailForm } from "@/components/auth/verify-email-form";
 import {
   Card,

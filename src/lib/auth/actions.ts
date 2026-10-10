@@ -13,8 +13,8 @@ import {
 import { clearAuthCookies, setAuthCookies } from "./cookies";
 import { decodeRoleFromAccessToken } from "./jwt";
 import { friendlyAuthMessage } from "./messages";
-import { homePathForRole } from "./role-paths";
 import { safeNext } from "./redirects";
+import { homePathForRole } from "./role-paths";
 import {
   forgotPasswordSchema,
   loginSchema,
