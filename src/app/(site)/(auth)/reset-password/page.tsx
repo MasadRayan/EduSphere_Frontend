@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import { FormSkeleton } from "@/components/auth/form-skeleton";
 import { ResetPasswordForm } from "@/components/auth/reset-password-form";
 import {
   Card,
@@ -17,7 +19,7 @@ export const metadata: Metadata = {
   description: "Choose a new password for your EduSphere account.",
 };
 
-export default async function ResetPasswordPage() {
+async function ResetPasswordSection() {
   const store = await cookies();
   const email = store.get(PENDING_EMAIL_COOKIE)?.value;
 
@@ -25,6 +27,10 @@ export default async function ResetPasswordPage() {
     redirect("/forgot-password");
   }
 
+  return <ResetPasswordForm email={email} />;
+}
+
+export default function ResetPasswordPage() {
   return (
     <Card>
       <CardHeader>
@@ -34,7 +40,9 @@ export default async function ResetPasswordPage() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ResetPasswordForm email={email} />
+        <Suspense fallback={<FormSkeleton />}>
+          <ResetPasswordSection />
+        </Suspense>
       </CardContent>
       <CardContent className="pt-0 text-sm text-muted-foreground">
         Need a new code?{" "}

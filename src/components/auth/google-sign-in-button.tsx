@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { googleLoginAction } from "@/lib/auth/actions";
 
@@ -41,6 +41,7 @@ declare global {
 export function GoogleSignInButton({ next }: { next?: string | null }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
+  const [, startTransition] = useTransition();
 
   const handleCredential = useCallback(
     (credential: string | undefined) => {
@@ -48,9 +49,23 @@ export function GoogleSignInButton({ next }: { next?: string | null }) {
         toast.error("Google sign-in did not return a token. Please try again.");
         return;
       }
-      void googleLoginAction(credential, next).then((result) => {
-        if (result && result.ok === false) {
-          toast.error(result.message);
+      startTransition(async () => {
+        try {
+          const result = await googleLoginAction(credential, next);
+          if (result && result.ok === false) {
+            toast.error(result.message);
+          }
+        } catch (error) {
+          const digest =
+            typeof error === "object" && error && "digest" in error
+              ? String((error as { digest?: unknown }).digest)
+              : "";
+          if (digest.startsWith("NEXT_REDIRECT")) {
+            return;
+          }
+          toast.error(
+            "We could not sign you in with Google. Please try again.",
+          );
         }
       });
     },

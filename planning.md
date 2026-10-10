@@ -327,13 +327,13 @@ The **course code tag**: a mono code in a bordered tag, used on every course car
 - [x] Dashboard shell with data-driven nav per role
 
 ### Phase 2: Authentication
-- [ ] Register (name 3-10, strong password) then OTP verify-email
-- [ ] Login with role-based redirect
-- [ ] Google login (ID token) action
-- [ ] Forgot password and reset password with OTP
-- [ ] Navbar with auth state, logout action
-- [ ] Silent token refresh verified end to end
-- [ ] Friendly messages for blocked, deleted and Google-only accounts
+- [x] Register (name 3-10, strong password) then OTP verify-email
+- [x] Login with role-based redirect
+- [x] Google login (ID token) action
+- [x] Forgot password and reset password with OTP
+- [x] Navbar with auth state, logout action
+- [x] Silent token refresh verified end to end
+- [x] Friendly messages for blocked, deleted and Google-only accounts
 
 ### Phase 3: Public Pages
 - [x] Landing page (hero built around the course code signature, programs, how enrollment works, CTA)

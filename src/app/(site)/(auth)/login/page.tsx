@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
+import { FormSkeleton } from "@/components/auth/form-skeleton";
 import { LoginForm } from "@/components/auth/login-form";
 import {
   Card,
@@ -15,15 +17,25 @@ export const metadata: Metadata = {
   description: "Log in to your EduSphere account.",
 };
 
-export default async function LoginPage({
+type LoginSearchParams = Promise<{ next?: string; reset?: string }>;
+
+async function LoginSection({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string; reset?: string }>;
+  searchParams: LoginSearchParams;
 }) {
   const params = await searchParams;
   const next = safeNext(typeof params.next === "string" ? params.next : null);
   const justReset = params.reset === "1";
 
+  return <LoginForm next={next} justReset={justReset} />;
+}
+
+export default function LoginPage({
+  searchParams,
+}: {
+  searchParams: LoginSearchParams;
+}) {
   return (
     <Card>
       <CardHeader>
@@ -31,7 +43,9 @@ export default async function LoginPage({
         <CardDescription>Log in to continue to your dashboard.</CardDescription>
       </CardHeader>
       <CardContent>
-        <LoginForm next={next} justReset={justReset} />
+        <Suspense fallback={<FormSkeleton google />}>
+          <LoginSection searchParams={searchParams} />
+        </Suspense>
       </CardContent>
       <CardContent className="pt-0 text-sm text-muted-foreground">
         New to EduSphere?{" "}

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import { FormSkeleton } from "@/components/auth/form-skeleton";
 import { VerifyEmailForm } from "@/components/auth/verify-email-form";
 import {
   Card,
@@ -18,10 +20,12 @@ export const metadata: Metadata = {
   description: "Verify your email to finish creating your EduSphere account.",
 };
 
-export default async function VerifyEmailPage({
+type VerifySearchParams = Promise<{ next?: string }>;
+
+async function VerifyEmailSection({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string }>;
+  searchParams: VerifySearchParams;
 }) {
   const store = await cookies();
   const email = store.get(PENDING_EMAIL_COOKIE)?.value;
@@ -33,6 +37,14 @@ export default async function VerifyEmailPage({
   const params = await searchParams;
   const next = safeNext(typeof params.next === "string" ? params.next : null);
 
+  return <VerifyEmailForm email={email} next={next} />;
+}
+
+export default function VerifyEmailPage({
+  searchParams,
+}: {
+  searchParams: VerifySearchParams;
+}) {
   return (
     <Card>
       <CardHeader>
@@ -43,7 +55,9 @@ export default async function VerifyEmailPage({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <VerifyEmailForm email={email} next={next} />
+        <Suspense fallback={<FormSkeleton />}>
+          <VerifyEmailSection searchParams={searchParams} />
+        </Suspense>
       </CardContent>
       <CardContent className="pt-0 text-sm text-muted-foreground">
         Wrong address?{" "}
