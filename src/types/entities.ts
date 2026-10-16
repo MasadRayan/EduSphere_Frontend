@@ -11,7 +11,6 @@ import type {
   StudentStatus,
   UserStatus,
 } from "./enums";
-
 export interface User {
   id: string;
   name: string;
@@ -149,6 +148,7 @@ export interface StudentApplication {
   reviewedAt: string | null;
   createdAt: string;
   updatedAt: string;
+  user?: { id: string; name: string; email: string; imageURL: string | null };
 }
 
 export interface StudentMe extends User {
@@ -170,6 +170,7 @@ export interface Payment {
   refundTrxId: string | null;
   refundedAt: string | null;
   semesterEnrollmentId: string | null;
+  user?: { name: string; email: string };
   semesterEnrollment?: {
     id: string;
     semesterId: string;
@@ -228,6 +229,11 @@ export interface SemesterEnrollment {
   updatedAt: string;
   registrations?: CourseRegistration[];
   payment?: Payment | null;
+  student?: {
+    id: string;
+    studentId: string;
+    user: { name: string; email: string };
+  };
 }
 
 export interface AttendanceRecord {
@@ -364,6 +370,7 @@ export interface InstructorApplication {
   reviewedAt: string | null;
   createdAt: string;
   updatedAt: string;
+  user?: { id: string; name: string; email: string; imageURL: string | null };
 }
 
 export interface InstructorMe extends User {
@@ -422,6 +429,104 @@ export interface InstructorAnalytics {
     attendanceRate: number;
   };
   grading: { totalGradeEntries: number };
+}
+
+export interface AdminAnalytics {
+  users: { totalStudents: number; totalInstructors: number };
+  applications: {
+    student: {
+      total: number;
+      pending: number;
+      approved: number;
+      rejected: number;
+    };
+    instructor: {
+      total: number;
+      pending: number;
+      approved: number;
+      rejected: number;
+    };
+  };
+  academics: {
+    departments: number;
+    programs: number;
+    courses: number;
+    semesters: number;
+    activeSemesters: number;
+  };
+  enrollments: {
+    courseSections: number;
+    semesterEnrollments: number;
+    enrolledEnrollments: number;
+    courseRegistrations: number;
+    enrolledRegistrations: number;
+    completedRegistrations: number;
+  };
+  assessment: {
+    exams: number;
+    results: number;
+    attendanceRecords: number;
+    presentRecords: number;
+    attendanceRate: number;
+  };
+  finance: { totalRevenue: number; totalRefunded: number; netRevenue: number };
+}
+
+export interface AdminStudentProfileSummary {
+  id: string;
+  studentId: string;
+  cgpa: number;
+  currentSemester?: { id: string; name: string; year: number } | null;
+}
+
+export interface AdminInstructorProfileSummary {
+  id: string;
+  instructorId?: string;
+  designation?: string | null;
+  departmentId?: string;
+  department?: Department;
+}
+
+export interface AdminUserRow {
+  id: string;
+  name: string;
+  email: string;
+  role: Role;
+  status: UserStatus;
+  emailVerified: boolean;
+  authProvider: AuthProvider;
+  needPasswordChange?: boolean;
+  isDeleted?: boolean;
+  deletedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  studentProfile?: AdminStudentProfileSummary | null;
+  instructorProfile?: AdminInstructorProfileSummary | null;
+  studentApplication?: { id: string; status: ApplicationStatus } | null;
+  instructorApplication?: { id: string; status: ApplicationStatus } | null;
+}
+
+export interface InstructorAdminRow {
+  id: string;
+  userId: string;
+  fullName: string;
+  phone: string | null;
+  avatarUrl: string | null;
+  designation: string | null;
+  departmentId: string;
+  department?: Department;
+  user?: { name: string; email: string };
+  _count?: { courseSections: number };
+}
+
+export interface AdminSemester extends Semester {
+  _count?: { sections: number; students: number };
+}
+
+export interface StudentSectionAdmin extends StudentSection {
+  program?: { id: string; name: string } | null;
+  enrolledCount?: number;
+  seatsAvailable?: number;
 }
 
 export interface StudentAnalytics {

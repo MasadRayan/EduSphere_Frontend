@@ -16,27 +16,27 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { updateResultAction } from "@/lib/instructor/actions";
+import type { ActionResult } from "@/types/api";
+import type { UpdateResultAction } from "./grading-sheet";
 
 export function EditResultDialog({
   resultId,
   studentName,
   totalMarks,
   currentMarks,
+  updateAction,
 }: {
   resultId: string;
   studentName: string;
   totalMarks: number;
   currentMarks: number | null;
+  updateAction: UpdateResultAction;
 }) {
   const [open, setOpen] = useState(false);
 
   const [state, formAction] = useActionState(
-    async (
-      prev: Parameters<typeof updateResultAction>[0],
-      formData: FormData,
-    ) => {
-      const result = await updateResultAction(prev, formData);
+    async (prev: ActionResult<null> | undefined, formData: FormData) => {
+      const result = await updateAction(prev, formData);
       if (result.ok) {
         toast.success(result.message);
         setOpen(false);

@@ -15,8 +15,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useActionToast } from "@/hooks/use-action-toast";
-import { enterResultsAction } from "@/lib/instructor/actions";
+import type { ActionResult } from "@/types/api";
 import type { InstructorResultRow, SectionStudent } from "@/types/entities";
+
+export type EnterResultsAction = (
+  prev: ActionResult<null> | undefined,
+  formData: FormData,
+) => Promise<ActionResult<null>>;
+
+export type UpdateResultAction = (
+  prev: ActionResult<null> | undefined,
+  formData: FormData,
+) => Promise<ActionResult<null>>;
 
 export interface GradingRow {
   /** StudentProfile id, used in the POST records payload. */
@@ -29,12 +39,16 @@ export function GradingSheet({
   examId,
   totalMarks,
   rows,
+  enterAction,
+  updateAction,
 }: {
   examId: string;
   totalMarks: number;
   rows: GradingRow[];
+  enterAction: EnterResultsAction;
+  updateAction: UpdateResultAction;
 }) {
-  const [state, formAction] = useActionState(enterResultsAction, undefined);
+  const [state, formAction] = useActionState(enterAction, undefined);
   useActionToast(state);
 
   const lastState = useRef(state);
@@ -116,6 +130,7 @@ export function GradingSheet({
                         studentName={row.student.user.name}
                         totalMarks={totalMarks}
                         currentMarks={row.result.marksObtained}
+                        updateAction={updateAction}
                       />
                     ) : (
                       <span className="text-xs text-muted-foreground">

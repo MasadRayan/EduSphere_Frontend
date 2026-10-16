@@ -126,6 +126,7 @@ const ADMIN_NAV: NavSection[] = [
     label: "People",
     items: [
       { label: "Users", href: "/admin/users", icon: Users },
+      { label: "Students", href: "/admin/students", icon: UserRound },
       { label: "Instructors", href: "/admin/instructors", icon: UserCog },
     ],
   },

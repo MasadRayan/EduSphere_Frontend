@@ -365,15 +365,15 @@ The **course code tag**: a mono code in a bordered tag, used on every course car
 - [x] Results: enter in bulk (upsert), edit single result
 
 ### Phase 6: Admin and Super Admin Dashboard
-- [ ] Analytics dashboard with semester and date filters
-- [ ] Student applications: list, approve (auto semester, optional section), reject with note
-- [ ] Instructor applications: list, approve and assign, reject
-- [ ] User management: filter by role/status/search, block/unblock, soft delete, role change (SUPER_ADMIN only, with the self-change and last-super-admin rules surfaced)
-- [ ] Academic structure CRUD: departments, programs, courses (with prerequisites), semesters (single active), course sections (assign instructor), student sections
-- [ ] Student controls: set current semester, assign section, update status
-- [ ] Enrollments (list, override status, cancel with refund)
-- [ ] Payments with revenue summary
-- [ ] Exams and results oversight
+- [x] Analytics dashboard with semester and date filters
+- [x] Student applications: list, approve (auto semester, optional section), reject with note
+- [x] Instructor applications: list, approve and assign, reject
+- [x] User management: filter by role/status/search, block/unblock, soft delete, role change (SUPER_ADMIN only, with the self-change and last-super-admin rules surfaced)
+- [x] Academic structure CRUD: departments, programs, courses (with prerequisites), semesters (single active), course sections (assign instructor), student sections
+- [x] Student controls: set current semester, assign section, update status
+- [x] Enrollments (list, override status, cancel with refund)
+- [x] Payments with revenue summary
+- [x] Exams and results oversight
 
 ### Phase 7: Polish
 - [ ] `loading.tsx` skeletons for every route group

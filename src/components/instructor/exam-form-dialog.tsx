@@ -24,9 +24,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useActionToast } from "@/hooks/use-action-toast";
-import { saveExamAction } from "@/lib/instructor/actions";
+import type { ActionResult } from "@/types/api";
 import type { CourseSection, InstructorExam } from "@/types/entities";
 import { EXAM_TYPES } from "@/types/enums";
+
+export type ExamFormAction = (
+  prev: ActionResult<null> | undefined,
+  formData: FormData,
+) => Promise<ActionResult<null>>;
 
 function toLocalInput(value: string | undefined): string {
   if (!value) {
@@ -48,11 +53,13 @@ export function ExamFormDialog({
   mode,
   exam,
   defaults,
+  action,
 }: {
   sections: CourseSection[];
   mode: "create" | "edit";
   exam?: InstructorExam;
   defaults?: ExamDefaults;
+  action: ExamFormAction;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -70,8 +77,8 @@ export function ExamFormDialog({
   const dateIso = date ? new Date(date).toISOString() : "";
 
   const [formState, formAction] = useActionState(
-    async (prev: Parameters<typeof saveExamAction>[0], formData: FormData) => {
-      const result = await saveExamAction(prev, formData);
+    async (prev: ActionResult<null> | undefined, formData: FormData) => {
+      const result = await action(prev, formData);
       if (result.ok) {
         toast.success(result.message);
         setOpen(false);

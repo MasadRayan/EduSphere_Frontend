@@ -5,14 +5,16 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { Button } from "@/components/ui/button";
-import { deleteExamAction } from "@/lib/instructor/actions";
+import type { ActionResult } from "@/types/api";
 
 export function DeleteExamButton({
   examId,
   examLabel,
+  action,
 }: {
   examId: string;
   examLabel: string;
+  action: (examId: string) => Promise<ActionResult<null>>;
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -20,7 +22,7 @@ export function DeleteExamButton({
 
   const onConfirm = () => {
     startTransition(async () => {
-      const result = await deleteExamAction(examId);
+      const result = await action(examId);
       if (result.ok) {
         toast.success(result.message);
         setOpen(false);

@@ -15,6 +15,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { requireRole } from "@/lib/auth/roles";
 import { formatDate } from "@/lib/format";
 import {
+  enterResultsAction,
+  updateResultAction,
+} from "@/lib/instructor/actions";
+import {
   getExamResults,
   getMySections,
   getSectionRoster,
@@ -228,6 +232,8 @@ export default async function ResultsPage({
             examId={activeExam.id}
             totalMarks={activeExam.totalMarks}
             rows={rows}
+            enterAction={enterResultsAction}
+            updateAction={updateResultAction}
           />
           <p className="text-xs text-muted-foreground">
             {graded} of {rows.length} students graded. Grades and grade points

@@ -14,6 +14,7 @@ import { TableFilter } from "@/components/shared/table-filter";
 import { Button } from "@/components/ui/button";
 import { requireRole } from "@/lib/auth/roles";
 import { formatDate } from "@/lib/format";
+import { deleteExamAction, saveExamAction } from "@/lib/instructor/actions";
 import { getMySections, listSectionExams } from "@/lib/instructor/service";
 import type { InstructorExam } from "@/types/entities";
 
@@ -107,10 +108,16 @@ export default async function ExamsPage({
               Enter results
             </Link>
           </Button>
-          <ExamFormDialog sections={sections} mode="edit" exam={exam} />
+          <ExamFormDialog
+            sections={sections}
+            mode="edit"
+            exam={exam}
+            action={saveExamAction}
+          />
           <DeleteExamButton
             examId={exam.id}
             examLabel={`${exam.type} of ${exam.courseSection?.course?.code ?? "course"} section ${exam.courseSection?.sectionCode ?? ""}`}
+            action={deleteExamAction}
           />
         </div>
       ),
@@ -122,7 +129,13 @@ export default async function ExamsPage({
       <PageHeader
         title="Exams"
         description="Create and manage exams for your sections, then enter results from the grading sheet."
-        actions={<ExamFormDialog sections={sections} mode="create" />}
+        actions={
+          <ExamFormDialog
+            sections={sections}
+            mode="create"
+            action={saveExamAction}
+          />
+        }
       />
 
       <div className="grid gap-4 sm:grid-cols-3">
@@ -166,6 +179,7 @@ export default async function ExamsPage({
                 sections={sections}
                 mode="create"
                 defaults={{ courseSectionId }}
+                action={saveExamAction}
               />
             )
           }

@@ -11,6 +11,7 @@ export const endpoints = {
     changePassword: "/api/auth/change-password",
   },
   student: {
+    base: "/api/student",
     apply: "/api/student/apply",
     application: "/api/student/application",
     me: "/api/student/me",
@@ -24,6 +25,7 @@ export const endpoints = {
     applications: "/api/student/applications",
   },
   instructor: {
+    base: "/api/instructor",
     apply: "/api/instructor/apply",
     application: "/api/instructor/application",
     resume: "/api/instructor/resume",
