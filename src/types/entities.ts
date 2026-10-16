@@ -332,6 +332,98 @@ export interface Transcript {
   };
 }
 
+export interface InstructorProfile {
+  id: string;
+  userId: string;
+  /** Staff code like INS-2026-0001, generated on approval. */
+  instructorId?: string;
+  instructorCode?: string;
+  fullName: string;
+  phone: string | null;
+  avatarUrl: string | null;
+  designation: string | null;
+  departmentId: string;
+  department?: Department;
+  user?: { name: string; email: string };
+  courseSections?: CourseSection[];
+}
+
+export interface InstructorApplication {
+  id: string;
+  userId: string;
+  fullName: string;
+  phone: string | null;
+  avatarUrl: string | null;
+  resumeUrl: string | null;
+  designation: string | null;
+  coverNote: string | null;
+  departmentId: string;
+  department?: Department;
+  status: ApplicationStatus;
+  reviewNote: string | null;
+  reviewedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface InstructorMe extends User {
+  instructorProfile: InstructorProfile | null;
+  instructorApplication: InstructorApplication | null;
+}
+
+export interface SectionStudent {
+  /** Student ID code like STU-2023-0001. */
+  studentId: string;
+  user: { name: string; email: string; imageURL: string | null };
+}
+
+export interface InstructorExam {
+  id: string;
+  sectionId?: string;
+  type: ExamType;
+  date: string;
+  totalMarks: number;
+  courseSection?: CourseSection;
+}
+
+export interface InstructorResultRow {
+  id: string;
+  examId: string;
+  studentId: string;
+  marksObtained: number | null;
+  grade: string | null;
+  gradePoint: number | null;
+  student?: SectionStudent;
+  exam?: InstructorExam;
+}
+
+export interface InstructorAttendanceRecord {
+  id: string;
+  studentId: string;
+  courseSectionId: string;
+  date: string;
+  status: AttendanceStatus;
+  student?: SectionStudent;
+}
+
+export interface InstructorAnalytics {
+  sections: {
+    totalSections: number;
+    totalCoursesTaught: number;
+    totalCapacity: number;
+    seatsFilled: number;
+    fillRate: number;
+  };
+  students: { totalStudentsEnrolled: number };
+  exams: { totalExams: number; upcomingExams: number; pendingGrading: number };
+  attendance: {
+    totalRecords: number;
+    presentRecords: number;
+    attendanceRate: number;
+  };
+  grading: { totalGradeEntries: number };
+}
+
 export interface StudentAnalytics {
   academic: {
     cgpa: number;

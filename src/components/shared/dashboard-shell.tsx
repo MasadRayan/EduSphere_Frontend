@@ -13,7 +13,9 @@ export async function DashboardShell({ children }: { children: ReactNode }) {
     redirect("/login");
   }
 
-  const gated = session.role === "STUDENT" && !session.studentProfile;
+  const gated =
+    (session.role === "STUDENT" && !session.studentProfile) ||
+    (session.role === "INSTRUCTOR" && !session.instructorProfile);
 
   const user: NavUser = {
     name: session.name,

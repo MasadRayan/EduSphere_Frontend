@@ -2,7 +2,7 @@ import "server-only";
 import { endpoints } from "@/lib/api/endpoints";
 import { serverFetch, serverFetchData } from "@/lib/api/server-fetch";
 import type { PaginationMeta } from "@/types/api";
-import type { Course, Department, Program } from "@/types/entities";
+import type { Course, Department, Program, Semester } from "@/types/entities";
 
 export interface CatalogListParams {
   departmentId?: string;
@@ -86,4 +86,12 @@ export async function getCourse(id: string): Promise<Course> {
   return serverFetchData<Course>(`${endpoints.courses}/${id}`, {
     next: { tags: ["courses", `course-${id}`] },
   });
+}
+
+export async function listSemesters(): Promise<Semester[]> {
+  const envelope = await serverFetch<Semester[]>(endpoints.semesters, {
+    query: { limit: "100" },
+    next: { tags: ["semesters"] },
+  });
+  return envelope.data;
 }

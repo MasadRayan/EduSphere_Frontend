@@ -356,13 +356,13 @@ The **course code tag**: a mono code in a bordered tag, used on every course car
 - [x] Transcript PDF download via the proxy
 
 ### Phase 5: Instructor Dashboard
-- [ ] Analytics dashboard (sections, fill rate, upcoming exams, pending grading, attendance rate)
-- [ ] Apply as instructor, resume upload, resubmit
-- [ ] Profile and avatar
-- [ ] My sections with enrolled students
-- [ ] Exams: create, edit, delete, view results
-- [ ] Attendance: mark per section/date (bulk table)
-- [ ] Results: enter in bulk (upsert), edit single result
+- [x] Analytics dashboard (sections, fill rate, upcoming exams, pending grading, attendance rate)
+- [x] Apply as instructor, resume upload, resubmit
+- [x] Profile and avatar
+- [x] My sections with enrolled students
+- [x] Exams: create, edit, delete, view results
+- [x] Attendance: mark per section/date (bulk table)
+- [x] Results: enter in bulk (upsert), edit single result
 
 ### Phase 6: Admin and Super Admin Dashboard
 - [ ] Analytics dashboard with semester and date filters

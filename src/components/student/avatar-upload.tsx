@@ -11,9 +11,11 @@ const MAX_BYTES = 5 * 1024 * 1024;
 export function AvatarUpload({
   name,
   currentUrl,
+  endpoint,
 }: {
   name: string;
   currentUrl: string | null;
+  endpoint: string;
 }) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -40,7 +42,7 @@ export function AvatarUpload({
     try {
       const body = new FormData();
       body.append("avatar", file);
-      const response = await fetch("/api/proxy/api/student/avatar", {
+      const response = await fetch(endpoint, {
         method: "PATCH",
         body,
       });

@@ -173,6 +173,16 @@ const GATED_STUDENT_NAV: NavSection[] = [
   },
 ];
 
+const GATED_INSTRUCTOR_NAV: NavSection[] = [
+  {
+    label: "Admission",
+    items: [
+      { label: "My application", href: "/instructor/apply", icon: FileText },
+      { label: "My profile", href: "/instructor/profile", icon: UserRound },
+    ],
+  },
+];
+
 export const NAV_BY_ROLE: Record<Role, NavSection[]> = {
   STUDENT: STUDENT_NAV,
   INSTRUCTOR: INSTRUCTOR_NAV,
@@ -183,6 +193,9 @@ export const NAV_BY_ROLE: Record<Role, NavSection[]> = {
 export function navForUser(user: NavUser, gated = false): NavSection[] {
   if (user.role === "STUDENT" && gated) {
     return GATED_STUDENT_NAV;
+  }
+  if (user.role === "INSTRUCTOR" && gated) {
+    return GATED_INSTRUCTOR_NAV;
   }
   return NAV_BY_ROLE[user.role];
 }

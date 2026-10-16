@@ -168,12 +168,7 @@ export function getStudentAnalytics(
   });
 }
 
-export async function listSemesters(): Promise<Semester[]> {
-  const envelope = await serverFetch<Semester[]>(endpoints.semesters, {
-    query: { limit: "100" },
-  });
-  return envelope.data;
-}
+export { listSemesters } from "@/lib/catalog/service";
 
 export async function listOfferedSections(
   semesterId: string,

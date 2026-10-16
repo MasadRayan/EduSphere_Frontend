@@ -55,6 +55,7 @@ export default async function ProfilePage() {
             <AvatarUpload
               name={profile?.fullName ?? me.name}
               currentUrl={profile?.avatarUrl ?? application?.avatarUrl ?? null}
+              endpoint="/api/proxy/api/student/avatar"
             />
           </CardContent>
         </Card>
