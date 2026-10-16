@@ -1,20 +1,23 @@
 import { ClipboardList } from "lucide-react";
 import Link from "next/link";
-import { CancelEnrollmentButton } from "@/components/student/cancel-enrollment-button";
-import { DataTable, type DataTableColumn } from "@/components/shared/data-table";
+import {
+  DataTable,
+  type DataTableColumn,
+} from "@/components/shared/data-table";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { TableFilter } from "@/components/shared/table-filter";
 import { TablePagination } from "@/components/shared/table-pagination";
+import { CancelEnrollmentButton } from "@/components/student/cancel-enrollment-button";
 import { Button } from "@/components/ui/button";
 import { requireRole } from "@/lib/auth/roles";
 import { formatCurrency, formatDate } from "@/lib/format";
-import { getMyEnrollments, listSemesters } from "@/lib/student/service";
 import { firstParam, readPage } from "@/lib/search-params";
-import { ENROLLMENT_STATUSES } from "@/types/enums";
+import { getMyEnrollments, listSemesters } from "@/lib/student/service";
 import type { SemesterEnrollment } from "@/types/entities";
+import { ENROLLMENT_STATUSES } from "@/types/enums";
 
 const PAGE_SIZE = 10;
 
@@ -102,9 +105,7 @@ export default async function StudentEnrollmentsPage({
             />
           ) : null}
           <Button asChild variant="ghost" size="sm">
-            <Link
-              href={`/student/courses?semesterId=${enrollment.semesterId}`}
-            >
+            <Link href={`/student/courses?semesterId=${enrollment.semesterId}`}>
               View courses
             </Link>
           </Button>

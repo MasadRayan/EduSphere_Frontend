@@ -1,4 +1,4 @@
-import { Calendar, BookOpen, Clock } from "lucide-react";
+import { BookOpen, Calendar, Clock } from "lucide-react";
 import { notFound } from "next/navigation";
 import { CourseCodeTag } from "@/components/shared/course-code-tag";
 import { StatCard } from "@/components/shared/stat-card";
@@ -35,9 +35,13 @@ export default async function StudentCourseDetailPage({
   const semester = section.semester;
   const instructor = section.instructor?.user;
   const attendances = section.attendances ?? [];
-  const present = attendances.filter((record) => record.status === "PRESENT").length;
+  const present = attendances.filter(
+    (record) => record.status === "PRESENT",
+  ).length;
   const late = attendances.filter((record) => record.status === "LATE").length;
-  const excused = attendances.filter((record) => record.status === "EXCUSED").length;
+  const excused = attendances.filter(
+    (record) => record.status === "EXCUSED",
+  ).length;
   const attended = present + late + excused;
   const percentage = attendances.length
     ? Math.round((attended / attendances.length) * 100)
@@ -62,11 +66,7 @@ export default async function StudentCourseDetailPage({
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          label="Section"
-          value={section.sectionCode}
-          icon={Clock}
-        />
+        <StatCard label="Section" value={section.sectionCode} icon={Clock} />
         <StatCard
           label="Semester"
           value={semester ? `${semester.name} ${semester.year}` : "-"}
@@ -81,7 +81,11 @@ export default async function StudentCourseDetailPage({
           label="Attendance"
           value={percentage ? `${percentage}%` : "-"}
           icon={Calendar}
-          hint={attendances.length ? `${attended} of ${attendances.length} classes` : undefined}
+          hint={
+            attendances.length
+              ? `${attended} of ${attendances.length} classes`
+              : undefined
+          }
         />
       </div>
 
@@ -93,7 +97,9 @@ export default async function StudentCourseDetailPage({
           <CardContent className="space-y-3 text-sm">
             <div className="flex justify-between gap-4 border-b border-border pb-3">
               <span className="text-muted-foreground">Schedule</span>
-              <span className="text-right">{section.schedule ?? "Not set"}</span>
+              <span className="text-right">
+                {section.schedule ?? "Not set"}
+              </span>
             </div>
             <div className="flex justify-between gap-4 border-b border-border pb-3">
               <span className="text-muted-foreground">Capacity</span>
@@ -101,7 +107,9 @@ export default async function StudentCourseDetailPage({
             </div>
             <div className="flex justify-between gap-4 border-b border-border pb-3">
               <span className="text-muted-foreground">Instructor</span>
-              <span className="text-right">{instructor?.name ?? "Not assigned"}</span>
+              <span className="text-right">
+                {instructor?.name ?? "Not assigned"}
+              </span>
             </div>
             <div className="flex justify-between gap-4">
               <span className="text-muted-foreground">Instructor email</span>
@@ -156,7 +164,9 @@ export default async function StudentCourseDetailPage({
                       <TableCell className="text-muted-foreground">
                         {formatDate(exam.date)}
                       </TableCell>
-                      <TableCell className="font-mono">{exam.totalMarks}</TableCell>
+                      <TableCell className="font-mono">
+                        {exam.totalMarks}
+                      </TableCell>
                       <TableCell className="font-mono">
                         {result?.marksObtained ?? "-"}
                       </TableCell>

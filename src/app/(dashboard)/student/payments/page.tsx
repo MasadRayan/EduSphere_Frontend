@@ -1,6 +1,9 @@
 import { Receipt, Wallet } from "lucide-react";
 import Link from "next/link";
-import { DataTable, type DataTableColumn } from "@/components/shared/data-table";
+import {
+  DataTable,
+  type DataTableColumn,
+} from "@/components/shared/data-table";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
@@ -10,14 +13,14 @@ import { TablePagination } from "@/components/shared/table-pagination";
 import { Button } from "@/components/ui/button";
 import { requireRole } from "@/lib/auth/roles";
 import { formatCurrency, formatDateTime } from "@/lib/format";
-import { getMyPayments } from "@/lib/student/service";
 import { firstParam, readPage } from "@/lib/search-params";
+import { getMyPayments } from "@/lib/student/service";
+import type { Payment } from "@/types/entities";
 import {
   PAYMENT_PURPOSES,
   PAYMENT_STATUSES,
   type PaymentPurpose,
 } from "@/types/enums";
-import type { Payment } from "@/types/entities";
 
 const PAGE_SIZE = 10;
 
@@ -39,7 +42,12 @@ export default async function StudentPaymentsPage({
   const purpose = firstParam(params.purpose);
   const page = readPage(params.page);
 
-  const payments = await getMyPayments({ status, purpose, page, limit: PAGE_SIZE });
+  const payments = await getMyPayments({
+    status,
+    purpose,
+    page,
+    limit: PAGE_SIZE,
+  });
 
   const columns: DataTableColumn<Payment>[] = [
     {

@@ -1,7 +1,10 @@
 import { BookOpen } from "lucide-react";
 import Link from "next/link";
 import { CourseCodeTag } from "@/components/shared/course-code-tag";
-import { DataTable, type DataTableColumn } from "@/components/shared/data-table";
+import {
+  DataTable,
+  type DataTableColumn,
+} from "@/components/shared/data-table";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatusBadge } from "@/components/shared/status-badge";
@@ -9,8 +12,8 @@ import { TableFilter } from "@/components/shared/table-filter";
 import { Button } from "@/components/ui/button";
 import { requireRole } from "@/lib/auth/roles";
 import { formatDate } from "@/lib/format";
-import { getRegisteredCourses } from "@/lib/student/service";
 import { firstParam } from "@/lib/search-params";
+import { getRegisteredCourses } from "@/lib/student/service";
 import type { CourseRegistration } from "@/types/entities";
 
 export default async function StudentCoursesPage({
@@ -26,8 +29,7 @@ export default async function StudentCoursesPage({
   const registrations = await getRegisteredCourses();
   const filtered = registrations.filter(
     (registration) =>
-      (!semesterId ||
-        registration.courseSection.semesterId === semesterId) &&
+      (!semesterId || registration.courseSection.semesterId === semesterId) &&
       (!status || registration.status === status),
   );
 

@@ -1,7 +1,4 @@
-export type SearchParamsInput = Record<
-  string,
-  string | string[] | undefined
->;
+export type SearchParamsInput = Record<string, string | string[] | undefined>;
 
 export function firstParam(
   value: string | string[] | undefined,

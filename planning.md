@@ -342,18 +342,18 @@ The **course code tag**: a mono code in a bordered tag, used on every course car
 - [x] SEO metadata, Open Graph
 
 ### Phase 4: Student Dashboard
-- [ ] Analytics dashboard (CGPA, credits, attendance %, grade breakdown, spend) with recharts
+- [x] Analytics dashboard (CGPA, credits, attendance %, grade breakdown, spend) with recharts
 - [x] Enrollment application (apply, view status, edit and resubmit when pending or rejected)
 - [x] Gating UI for pending/rejected applicants
 - [x] Profile update and avatar upload
 - [x] Course picker (max 20, credit limit feedback, prerequisite errors shown per course) then Enroll
 - [x] bKash redirect, `payment-result` page (success and failure states, link to enrollment)
-- [ ] My enrollments (filter by status/semester), cancel with refund confirmation
-- [ ] My payments
-- [ ] Registered courses and details
-- [ ] Attendance summary by course
-- [ ] Grades list and detail, CGPA
-- [ ] Transcript PDF download via the proxy
+- [x] My enrollments (filter by status/semester), cancel with refund confirmation
+- [x] My payments
+- [x] Registered courses and details
+- [x] Attendance summary by course
+- [x] Grades list and detail, CGPA
+- [x] Transcript PDF download via the proxy
 
 ### Phase 5: Instructor Dashboard
 - [ ] Analytics dashboard (sections, fill rate, upcoming exams, pending grading, attendance rate)
