@@ -25,6 +25,8 @@ export interface CoursePickerProps {
   sections: CourseSection[];
   completedCourseIds: string[];
   enrolledCourseIds: string[];
+  /** Course ids to preselect, for example when arriving from a course page. */
+  initialCourseIds?: string[];
 }
 
 function deadlineOf(semester: Semester): Date {
@@ -37,9 +39,9 @@ export function CoursePicker({
   sections,
   completedCourseIds,
   enrolledCourseIds,
+  initialCourseIds = [],
 }: CoursePickerProps) {
   const [state, formAction] = useActionState(enrollAction, undefined);
-  const [selected, setSelected] = useState<Set<string>>(new Set());
   const [blockHint, setBlockHint] = useState<string | null>(null);
 
   const completed = useMemo(
@@ -63,6 +65,41 @@ export function CoursePicker({
 
   const deadline = deadlineOf(semester);
   const deadlinePassed = deadline.getTime() <= Date.now();
+
+  const rows = useMemo(() => {
+    return courses
+      .filter((course) => !completed.has(course.id) && !enrolled.has(course.id))
+      .sort((a, b) => a.code.localeCompare(b.code));
+  }, [courses, completed, enrolled]);
+
+  // Preselect requested courses only when they are actually selectable, so a
+  // stale link can never submit a course with no section, missing prerequisites
+  // or a passed deadline.
+  const initialSelection = useMemo(() => {
+    if (deadlinePassed || initialCourseIds.length === 0) {
+      return new Set<string>();
+    }
+    return new Set(
+      initialCourseIds.filter((courseId) => {
+        const course = rows.find((row) => row.id === courseId);
+        if (!course) {
+          return false;
+        }
+        if ((sectionsByCourse.get(courseId) ?? []).length === 0) {
+          return false;
+        }
+        const missingPrerequisite = (course.prerequisites ?? []).some(
+          (item) =>
+            item.prerequisite && !completed.has(item.prerequisite.id ?? ""),
+        );
+        return (
+          !missingPrerequisite && course.creditHours <= MAX_SEMESTER_CREDITS
+        );
+      }),
+    );
+  }, [deadlinePassed, initialCourseIds, rows, sectionsByCourse, completed]);
+
+  const [selected, setSelected] = useState<Set<string>>(initialSelection);
 
   const runningCredits = useMemo(
     () =>
@@ -98,12 +135,6 @@ export function CoursePicker({
     }
     setSelected(new Set(selected).add(course.id));
   };
-
-  const rows = useMemo(() => {
-    return courses
-      .filter((course) => !completed.has(course.id) && !enrolled.has(course.id))
-      .sort((a, b) => a.code.localeCompare(b.code));
-  }, [courses, completed, enrolled]);
 
   return (
     <form action={formAction}>

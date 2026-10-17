@@ -72,13 +72,37 @@ REST backend is a separate service; only the server knows its URL.
 
 ### bKash callback
 
-bKash returns to the backend callback, which then redirects the browser to the
-payment result page. The backend must point its `FRONTEND_URL` at the deployed
-origin plus `/student/payment-result`, for example:
+Three URLs are in play. The frontend owns a single result page, and the backend
+decides the outcome with a query string.
+
+| Variable (backend) | Points at | Example |
+| --- | --- | --- |
+| `BKASH_CALLBACK_URL` | The backend route bKash redirects to | `https://<backend>/api/course-registrations/bkash/callback` |
+| `FRONTEND_URL` | CORS origin for the browser, scheme and host only | `https://<frontend-domain>` |
+| `PAYMENT_RESULT_URL` | The result page the backend redirects to | `https://<frontend-domain>/student/payment-result` |
+
+bKash sends the browser to `BKASH_CALLBACK_URL`. The backend executes the
+payment, then redirects to `PAYMENT_RESULT_URL` with:
+
+- success: `?payment=success&trxId=...&enrollmentId=...`
+- failure: `?payment=failed&status=...`
+
+The single `/student/payment-result` page renders both states. Keep the path out
+of `FRONTEND_URL`; it is the CORS origin, and a path there breaks browser
+requests.
+
+If `PAYMENT_RESULT_URL` is unset, the backend falls back to `FRONTEND_URL`, and
+the landing page catches `?payment=...` and forwards to
+`/student/payment-result`. Setting `PAYMENT_RESULT_URL` skips that extra hop.
+
+Backend example:
 
 ```env
-# On the backend service
-FRONTEND_URL=https://<your-frontend-domain>/student/payment-result
+NODE_ENV=production
+BACKEND_URL=https://<backend>
+FRONTEND_URL=https://<frontend-domain>
+PAYMENT_RESULT_URL=https://<frontend-domain>/student/payment-result
+BKASH_CALLBACK_URL=https://<backend>/api/course-registrations/bkash/callback
 ```
 
 Verify after deploying:
@@ -88,7 +112,8 @@ Verify after deploying:
 3. You should land on `/student/payment-result?payment=success&trxId=...` or
    `?payment=failed&status=...` and see the matching state.
 
-For local testing, set the backend `FRONTEND_URL` to
+For local testing, bKash cannot reach `localhost`. Point `BKASH_CALLBACK_URL` at
+a public tunnel for your local backend, and keep `PAYMENT_RESULT_URL` at
 `http://localhost:3000/student/payment-result`.
 
 ### Remote images

@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { requireRole } from "@/lib/auth/roles";
+import { firstParam, type SearchParamsInput } from "@/lib/search-params";
 import {
   getActiveSemester,
   getMyEnrollments,
@@ -26,8 +27,15 @@ import type { EnrollmentStatus } from "@/types/enums";
 
 export const metadata: Metadata = { title: "Enroll in courses" };
 
-export default async function StudentEnrollPage() {
+export default async function StudentEnrollPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParamsInput>;
+}) {
   await requireRole("STUDENT");
+
+  const params = await searchParams;
+  const preselectCourseId = firstParam(params.courseId);
 
   const semester = await getActiveSemester();
 
@@ -87,6 +95,7 @@ export default async function StudentEnrollPage() {
         sections={sections}
         completedCourseIds={completedCourseIds}
         enrolledCourseIds={enrolledCourseIds}
+        initialCourseIds={preselectCourseId ? [preselectCourseId] : []}
       />
     </div>
   );

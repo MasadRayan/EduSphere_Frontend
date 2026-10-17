@@ -243,7 +243,7 @@ NEXT_PUBLIC_GOOGLE_CLIENT_ID=
 # NEXT_PUBLIC_APP_URL=https://<your-frontend-domain>
 ```
 
-Backend `.env` must set the frontend URL used by the bKash callback redirect to `http://localhost:3000/student/payment-result` (and the production equivalent).
+Backend `.env` must set `PAYMENT_RESULT_URL` to the bKash redirect target, default `http://localhost:3000/student/payment-result`, and keep `FRONTEND_URL` as the CORS origin without a path.
 
 ### API proxy (`app/api/proxy/[...path]/route.ts`)
 - Handles GET, POST, PUT, PATCH and DELETE

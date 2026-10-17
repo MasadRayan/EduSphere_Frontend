@@ -7,8 +7,33 @@ import { ApiError } from "@/lib/api/errors";
 import { getSession } from "@/lib/auth/session";
 import { isCatalogGated } from "@/lib/catalog/gate";
 import { getCourse } from "@/lib/catalog/service";
+import { getRegisteredCourses } from "@/lib/student/service";
+import type { RegistrationStatus } from "@/types/enums";
 import { CatalogGate } from "./catalog-gate";
+import {
+  CourseRegisterButton,
+  type CourseRegisterState,
+} from "./course-register-button";
 import { PrerequisiteList } from "./prerequisite-list";
+
+/**
+ * Reads the signed-in student's registrations and reports how this course sits
+ * against them. A failure degrades to "not registered" rather than breaking the
+ * catalog page; the enroll page re-checks eligibility before anything is saved.
+ */
+async function getCourseRegistrationStatus(
+  courseId: string,
+): Promise<RegistrationStatus | null> {
+  try {
+    const registrations = await getRegisteredCourses();
+    const match = registrations.find(
+      (registration) => registration.courseSection.courseId === courseId,
+    );
+    return match?.status ?? null;
+  } catch {
+    return null;
+  }
+}
 
 export async function CourseDetail({
   params,
@@ -34,6 +59,22 @@ export async function CourseDetail({
     throw error;
   }
 
+  let registerState: CourseRegisterState | null = null;
+  if (session.role === "STUDENT") {
+    if (!session.studentProfile) {
+      registerState = { kind: "unapproved" };
+    } else {
+      const status = await getCourseRegistrationStatus(course.id);
+      if (status === "COMPLETED") {
+        registerState = { kind: "completed" };
+      } else if (status === "ENROLLED") {
+        registerState = { kind: "enrolled" };
+      } else {
+        registerState = { kind: "available" };
+      }
+    }
+  }
+
   return (
     <article className="space-y-8">
       <header className="space-y-4">
@@ -48,6 +89,10 @@ export async function CourseDetail({
           <p className="text-muted-foreground">{course.department.name}</p>
         ) : null}
       </header>
+
+      {registerState ? (
+        <CourseRegisterButton courseId={course.id} state={registerState} />
+      ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1 rounded-xl border border-border bg-background p-4">
