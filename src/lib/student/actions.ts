@@ -3,17 +3,15 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import type { ZodError } from "zod";
+import type { FormState } from "@/lib/actions/shared";
+import { fieldErrorsFrom, messageFrom, readString } from "@/lib/actions/shared";
 import { endpoints } from "@/lib/api/endpoints";
-import { ApiError } from "@/lib/api/errors";
 import { serverFetchData } from "@/lib/api/server-fetch";
-import { getSession } from "@/lib/auth/session";
+import { requireRole } from "@/lib/auth/roles";
 import { setFlash } from "@/lib/flash";
 import type { ActionResult } from "@/types/api";
 import type { StudentMe } from "@/types/entities";
 import { applySchema, enrollSchema, profileSchema } from "./schemas";
-
-type FormState = ActionResult<null> | undefined;
 
 interface EnrollResult {
   paymentUrl: string;
@@ -30,40 +28,11 @@ interface EnrollResult {
   }[];
 }
 
-function fieldErrorsFrom(error: ZodError): Record<string, string[]> {
-  const flat = error.flatten().fieldErrors;
-  const result: Record<string, string[]> = {};
-  for (const [key, value] of Object.entries(flat)) {
-    if (value?.length) {
-      result[key] = value;
-    }
-  }
-  return result;
-}
-
-function messageFrom(error: unknown, fallback: string): string {
-  if (error instanceof ApiError) {
-    return error.message;
-  }
-  return fallback;
-}
-
-function readString(value: FormDataEntryValue | null): string {
-  return typeof value === "string" ? value : "";
-}
-
-async function requireStudent(): Promise<void> {
-  const session = await getSession();
-  if (!session || session.role !== "STUDENT") {
-    redirect("/login");
-  }
-}
-
 export async function applyStudentAction(
   _prev: FormState,
   formData: FormData,
 ): Promise<ActionResult<null>> {
-  await requireStudent();
+  await requireRole("STUDENT");
 
   const parsed = applySchema.safeParse({
     phone: readString(formData.get("phone")) || undefined,
@@ -112,7 +81,7 @@ export async function updateProfileAction(
   _prev: FormState,
   formData: FormData,
 ): Promise<ActionResult<null>> {
-  await requireStudent();
+  await requireRole("STUDENT");
 
   const parsed = profileSchema.safeParse({
     fullName: readString(formData.get("fullName")),
@@ -150,7 +119,7 @@ export async function updateProfileAction(
 export async function cancelEnrollmentAction(
   enrollmentId: string,
 ): Promise<ActionResult<null>> {
-  await requireStudent();
+  await requireRole("STUDENT");
 
   if (!enrollmentId) {
     return { ok: false, message: "Missing enrollment reference." };
@@ -181,7 +150,7 @@ export async function enrollAction(
   _prev: FormState,
   formData: FormData,
 ): Promise<ActionResult<null>> {
-  await requireStudent();
+  await requireRole("STUDENT");
 
   const parsed = enrollSchema.safeParse({
     courseIds: formData.getAll("courseIds").map(readString),

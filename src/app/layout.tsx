@@ -5,7 +5,6 @@ import {
   JetBrains_Mono,
 } from "next/font/google";
 import { Suspense } from "react";
-import { QueryProvider } from "@/components/providers/query-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { FlashToaster } from "@/components/shared/flash-toaster";
 import { ScrollToTop } from "@/components/shared/scroll-to-top";
@@ -84,9 +83,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
-          <QueryProvider>
-            <TooltipProvider>{children}</TooltipProvider>
-          </QueryProvider>
+          <TooltipProvider>{children}</TooltipProvider>
         </ThemeProvider>
         <Toaster position="top-center" />
         <Suspense fallback={null}>

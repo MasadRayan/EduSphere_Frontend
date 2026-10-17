@@ -1,12 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import type { ZodError } from "zod";
+import type { FormState } from "@/lib/actions/shared";
+import { fieldErrorsFrom, messageFrom, readString } from "@/lib/actions/shared";
 import { endpoints } from "@/lib/api/endpoints";
-import { ApiError } from "@/lib/api/errors";
 import { serverFetchData } from "@/lib/api/server-fetch";
-import { getSession } from "@/lib/auth/session";
+import { requireRole } from "@/lib/auth/roles";
 import {
   applySchema,
   attendanceRecordSchema,
@@ -19,42 +18,11 @@ import {
 } from "@/lib/instructor/schemas";
 import type { ActionResult } from "@/types/api";
 
-type FormState = ActionResult<null> | undefined;
-
-function fieldErrorsFrom(error: ZodError): Record<string, string[]> {
-  const flat = error.flatten().fieldErrors;
-  const result: Record<string, string[]> = {};
-  for (const [key, value] of Object.entries(flat)) {
-    if (value?.length) {
-      result[key] = value;
-    }
-  }
-  return result;
-}
-
-function messageFrom(error: unknown, fallback: string): string {
-  if (error instanceof ApiError) {
-    return error.message;
-  }
-  return fallback;
-}
-
-function readString(value: FormDataEntryValue | null): string {
-  return typeof value === "string" ? value : "";
-}
-
-async function requireInstructor(): Promise<void> {
-  const session = await getSession();
-  if (!session || session.role !== "INSTRUCTOR") {
-    redirect("/login");
-  }
-}
-
 export async function applyInstructorAction(
   _prev: FormState,
   formData: FormData,
 ): Promise<ActionResult<null>> {
-  await requireInstructor();
+  await requireRole("INSTRUCTOR");
 
   const parsed = applySchema.safeParse({
     phone: readString(formData.get("phone")) || undefined,
@@ -101,7 +69,7 @@ export async function updateInstructorProfileAction(
   _prev: FormState,
   formData: FormData,
 ): Promise<ActionResult<null>> {
-  await requireInstructor();
+  await requireRole("INSTRUCTOR");
 
   const parsed = profileSchema.safeParse({
     fullName: readString(formData.get("fullName")),
@@ -137,7 +105,7 @@ export async function saveExamAction(
   _prev: FormState,
   formData: FormData,
 ): Promise<ActionResult<null>> {
-  await requireInstructor();
+  await requireRole("INSTRUCTOR");
 
   const parsed = examSchema.safeParse({
     courseSectionId: readString(formData.get("courseSectionId")),
@@ -204,7 +172,7 @@ export async function saveExamAction(
 export async function deleteExamAction(
   examId: string,
 ): Promise<ActionResult<null>> {
-  await requireInstructor();
+  await requireRole("INSTRUCTOR");
 
   if (!examId) {
     return { ok: false, message: "Missing exam reference." };
@@ -236,7 +204,7 @@ export async function markAttendanceAction(
   _prev: FormState,
   formData: FormData,
 ): Promise<ActionResult<null>> {
-  await requireInstructor();
+  await requireRole("INSTRUCTOR");
 
   const base = attendanceSheetSchema.safeParse({
     courseSectionId: readString(formData.get("courseSectionId")),
@@ -304,7 +272,7 @@ export async function enterResultsAction(
   _prev: FormState,
   formData: FormData,
 ): Promise<ActionResult<null>> {
-  await requireInstructor();
+  await requireRole("INSTRUCTOR");
 
   const base = gradingSchema.safeParse({
     examId: readString(formData.get("examId")),
@@ -365,7 +333,7 @@ export async function updateResultAction(
   _prev: FormState,
   formData: FormData,
 ): Promise<ActionResult<null>> {
-  await requireInstructor();
+  await requireRole("INSTRUCTOR");
 
   const parsed = singleResultSchema.safeParse({
     resultId: readString(formData.get("resultId")),

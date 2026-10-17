@@ -1,6 +1,8 @@
 import "server-only";
+import { cacheLife, cacheTag } from "next/cache";
 import { endpoints } from "@/lib/api/endpoints";
 import { serverFetch, serverFetchData } from "@/lib/api/server-fetch";
+import { TAGS } from "@/lib/cache/tags";
 import type { PaginationMeta, PaymentsMeta } from "@/types/api";
 import type {
   AttendanceGroup,
@@ -170,9 +172,19 @@ export function getStudentAnalytics(
 
 export { listSemesters } from "@/lib/catalog/service";
 
+/**
+ * Offered sections and the active semester feed the enrollment flow. They
+ * change only when an admin edits the catalog, so a short private cache keeps
+ * the picker snappy without letting a deadline change lag for long.
+ */
+const ENROLL_LOOKUP_STALE_SECONDS = 60;
+
 export async function listOfferedSections(
   semesterId: string,
 ): Promise<CourseSection[]> {
+  "use cache: private";
+  cacheTag(TAGS.courses, TAGS.semesters);
+  cacheLife({ stale: ENROLL_LOOKUP_STALE_SECONDS });
   const envelope = await serverFetch<CourseSection[]>(
     endpoints.courseSections,
     {
@@ -183,6 +195,9 @@ export async function listOfferedSections(
 }
 
 export async function getActiveSemester(): Promise<Semester | null> {
+  "use cache: private";
+  cacheTag(TAGS.semesters);
+  cacheLife({ stale: ENROLL_LOOKUP_STALE_SECONDS });
   const envelope = await serverFetch<Semester[]>(endpoints.semesters, {
     query: { isActive: "true", limit: "1" },
   });
@@ -190,6 +205,9 @@ export async function getActiveSemester(): Promise<Semester | null> {
 }
 
 export async function listEnrollCourses(): Promise<Course[]> {
+  "use cache: private";
+  cacheTag(TAGS.courses);
+  cacheLife({ stale: ENROLL_LOOKUP_STALE_SECONDS });
   const envelope = await serverFetch<Course[]>(endpoints.courses, {
     query: { limit: "100" },
   });

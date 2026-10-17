@@ -2,7 +2,8 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import type { ZodError } from "zod";
+import type { FormState } from "@/lib/actions/shared";
+import { fieldErrorsFrom, readString } from "@/lib/actions/shared";
 import { ApiError } from "@/lib/api/errors";
 import { setFlash } from "@/lib/flash";
 import type { ActionResult } from "@/types/api";
@@ -32,19 +33,6 @@ import {
   verifyEmail,
 } from "./service";
 
-type FormState = ActionResult<null> | undefined;
-
-function fieldErrorsFrom(error: ZodError): Record<string, string[]> {
-  const flat = error.flatten().fieldErrors;
-  const result: Record<string, string[]> = {};
-  for (const [key, value] of Object.entries(flat)) {
-    if (value?.length) {
-      result[key] = value;
-    }
-  }
-  return result;
-}
-
 function messageFrom(error: unknown, fallback: string): string {
   if (error instanceof ApiError) {
     if (error.kind === "network") {
@@ -53,10 +41,6 @@ function messageFrom(error: unknown, fallback: string): string {
     return friendlyAuthMessage(error.message, fallback);
   }
   return fallback;
-}
-
-function readString(value: FormDataEntryValue | null): string {
-  return typeof value === "string" ? value : "";
 }
 
 export async function registerAction(
