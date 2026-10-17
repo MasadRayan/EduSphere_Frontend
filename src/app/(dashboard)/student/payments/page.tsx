@@ -62,6 +62,7 @@ export default async function StudentPaymentsPage({
     {
       id: "invoice",
       header: "Invoice",
+      mobilePrimary: true,
       cell: (payment) => (
         <span className="font-mono text-xs">
           {payment.merchantInvoiceNumber ?? "-"}

@@ -2,6 +2,7 @@
 
 import { Menu } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { LogoutButton } from "@/components/auth/logout";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
+import { isActiveLink } from "./site-nav";
 
 export function MobileNav({
   links,
@@ -28,6 +31,7 @@ export function MobileNav({
   isAuthenticated: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -47,16 +51,23 @@ export function MobileNav({
           <SheetTitle className="font-display">EduSphere</SheetTitle>
         </SheetHeader>
         <nav className="flex flex-col gap-1 px-4">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setOpen(false)}
-              className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {links.map((link) => {
+            const active = isActiveLink(pathname, link.href);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+                onClick={() => setOpen(false)}
+                className={cn(
+                  "rounded-md px-3 py-2 text-sm font-medium outline-hidden hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring",
+                  active && "bg-muted text-foreground",
+                )}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
         <SheetFooter>
           {showAuthActions ? (

@@ -376,14 +376,14 @@ The **course code tag**: a mono code in a bordered tag, used on every course car
 - [x] Exams and results oversight
 
 ### Phase 7: Polish
-- [ ] `loading.tsx` skeletons for every route group
-- [ ] `error.tsx`, `not-found.tsx`, `global-error.tsx`
-- [ ] Empty states for every list
-- [ ] Responsive pass (tables become cards on mobile)
-- [ ] Accessibility pass (focus, labels, contrast)
-- [ ] Dark mode check
-- [ ] Biome lint and production build with no errors
-- [ ] Deployment on Vercel with env vars, bKash callback URL verified
+- [x] `loading.tsx` skeletons for every route group
+- [x] `error.tsx`, `not-found.tsx`, `global-error.tsx`
+- [x] Empty states for every list
+- [x] Responsive pass (tables become cards on mobile)
+- [x] Accessibility pass (focus, labels, contrast)
+- [x] Dark mode check
+- [x] Biome lint and production build with no errors
+- [ ] Deployment on Vercel with env vars, bKash callback URL verified (deploy steps documented in README; the deploy and the bKash redirect still need the live environment)
 
 ## 8. Key Implementation Notes
 
@@ -488,9 +488,9 @@ Full rules live in `AGENTS.md` (Definition of Done). After finishing ANY task, t
 - [ ] Approve/reject, CRUD and filters update the UI without a manual refresh (tag revalidation)
 
 ### Phase 7: Polish
-- [ ] Every route has `loading.tsx` and a matching skeleton
-- [ ] Lighthouse accessibility 90+ on landing and one dashboard page
-- [ ] Production deploy tested with the real backend and bKash redirect
+- [x] Every route has `loading.tsx` and a matching skeleton
+- [ ] Lighthouse accessibility 90+ on landing and one dashboard page (not run: no Chrome or Chrome launcher available in this environment)
+- [ ] Production deploy tested with the real backend and bKash redirect (not run: needs Vercel and the live backend)
 
 ## 11. Success Criteria
 - All flows work end to end for all four roles

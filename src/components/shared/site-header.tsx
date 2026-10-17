@@ -5,6 +5,7 @@ import { homePathForRole } from "@/lib/auth/role-paths";
 import { getSession } from "@/lib/auth/session";
 import { AccountMenu } from "./account-menu";
 import { MobileNav } from "./mobile-nav";
+import { SiteNav } from "./site-nav";
 import { ThemeToggle } from "./theme-toggle";
 
 const SITE_LINKS = [
@@ -34,16 +35,10 @@ export async function SiteHeader() {
           </span>
         </Link>
 
-        <nav
-          aria-label="Main"
+        <SiteNav
+          links={SITE_LINKS}
           className="hidden items-center gap-1 justify-self-center md:flex"
-        >
-          {SITE_LINKS.map((link) => (
-            <Button key={link.href} asChild variant="ghost" size="sm">
-              <Link href={link.href}>{link.label}</Link>
-            </Button>
-          ))}
-        </nav>
+        />
 
         <div className="flex items-center gap-2 justify-self-end">
           <ThemeToggle />

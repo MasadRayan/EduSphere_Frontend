@@ -4,6 +4,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { getSession } from "@/lib/auth/session";
 import type { NavUser } from "@/lib/nav";
 import { AppSidebar } from "./app-sidebar";
+import { SkipLink } from "./skip-link";
 import { Topbar } from "./topbar";
 
 export async function DashboardShell({ children }: { children: ReactNode }) {
@@ -26,10 +27,17 @@ export async function DashboardShell({ children }: { children: ReactNode }) {
 
   return (
     <SidebarProvider>
+      <SkipLink />
       <AppSidebar user={user} gated={gated} />
       <SidebarInset>
         <Topbar user={user} />
-        <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">{children}</div>
+        <main
+          id="main-content"
+          tabIndex={-1}
+          className="flex flex-1 flex-col gap-6 p-4 md:p-6"
+        >
+          {children}
+        </main>
       </SidebarInset>
     </SidebarProvider>
   );
