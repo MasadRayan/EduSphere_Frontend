@@ -30,7 +30,7 @@ export function AccountMenu({
         <Button
           type="button"
           variant="ghost"
-          size="sm"
+          size="default"
           className="hidden gap-2 md:inline-flex"
         >
           <AvatarWithFallback name={name} src={avatarUrl} size="sm" />

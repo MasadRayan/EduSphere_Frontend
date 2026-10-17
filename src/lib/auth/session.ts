@@ -6,6 +6,25 @@ import { serverFetchData } from "@/lib/api/server-fetch";
 import type { SessionUser } from "@/types/entities";
 
 /**
+ * The backend keeps the profile photo on studentProfile/instructorProfile and
+ * the user level photo on imageURL. Resolve the first one that has a value so
+ * every screen can read a single session.avatarUrl.
+ */
+function resolveAvatarUrl(user: SessionUser): string | null {
+  const candidates = [
+    user.studentProfile?.avatarUrl,
+    user.instructorProfile?.avatarUrl,
+    user.imageURL,
+  ];
+  for (const candidate of candidates) {
+    if (candidate) {
+      return candidate;
+    }
+  }
+  return null;
+}
+
+/**
  * Reads the current session from the backend. Cached per request so a layout
  * and a page do not trigger duplicate /api/auth/me calls.
  *
@@ -15,9 +34,10 @@ import type { SessionUser } from "@/types/entities";
  */
 export const getSession = cache(async (): Promise<SessionUser | null> => {
   try {
-    return await serverFetchData<SessionUser>(endpoints.auth.me, {
+    const user = await serverFetchData<SessionUser>(endpoints.auth.me, {
       cache: "no-store",
     });
+    return { ...user, avatarUrl: resolveAvatarUrl(user) };
   } catch (error) {
     if (error instanceof ApiError && isAuthFailureKind(error.kind)) {
       return null;

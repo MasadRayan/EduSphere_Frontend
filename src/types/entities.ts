@@ -19,6 +19,14 @@ export interface User {
   status: UserStatus;
   emailVerified: boolean;
   authProvider: AuthProvider;
+  /** Raw photo the backend stores on the user (Cloudinary or Google). */
+  imageURL: string | null;
+  imagePublicId?: string | null;
+  /**
+   * Resolved photo for the session. The backend sends the profile photo on
+   * studentProfile/instructorProfile, so session.ts fills this from there and
+   * falls back to imageURL.
+   */
   avatarUrl: string | null;
   avatarPublicId?: string | null;
   createdAt: string;
@@ -27,12 +35,16 @@ export interface User {
 
 export interface StudentProfileSummary {
   id: string;
+  fullName: string;
+  avatarUrl: string | null;
   departmentId: string;
   programId: string;
 }
 
 export interface InstructorProfileSummary {
   id: string;
+  fullName: string;
+  avatarUrl: string | null;
   departmentId: string;
 }
 

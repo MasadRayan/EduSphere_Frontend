@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
-const SIZE_PX = { sm: 24, default: 32, lg: 40 } as const;
+const SIZE_PX = { sm: 28, default: 32, lg: 40 } as const;
 
 function initials(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
