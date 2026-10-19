@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { requireStudentProfile } from "@/lib/auth/roles";
 
 export const metadata: Metadata = { title: "Payment result" };
 
@@ -33,6 +34,7 @@ export default async function PaymentResultPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  await requireStudentProfile();
   const params = await searchParams;
   const payment = first(params.payment);
   const success = payment === "success";

@@ -6,13 +6,13 @@ import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
 import { AttendanceGroupCard } from "@/components/student/attendance-group-card";
 import { Button } from "@/components/ui/button";
-import { requireRole } from "@/lib/auth/roles";
+import { requireStudentProfile } from "@/lib/auth/roles";
 import { getAttendance, getRegisteredCourses } from "@/lib/student/service";
 
 export const metadata: Metadata = { title: "Attendance" };
 
 export default async function StudentAttendancePage() {
-  await requireRole("STUDENT");
+  await requireStudentProfile();
 
   const [groups, registrations] = await Promise.all([
     getAttendance(),

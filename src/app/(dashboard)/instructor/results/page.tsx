@@ -12,7 +12,7 @@ import { TableFilter } from "@/components/shared/table-filter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { requireRole } from "@/lib/auth/roles";
+import { requireInstructorProfile } from "@/lib/auth/roles";
 import { formatDate } from "@/lib/format";
 import {
   enterResultsAction,
@@ -34,7 +34,7 @@ export default async function ResultsPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  await requireRole("INSTRUCTOR");
+  await requireInstructorProfile();
   const params = await searchParams;
   const courseSectionId = firstParam(params.courseSectionId);
   const examId = firstParam(params.examId);

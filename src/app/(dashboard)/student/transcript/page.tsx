@@ -8,7 +8,7 @@ import { TableFilter } from "@/components/shared/table-filter";
 import { TranscriptDownload } from "@/components/student/transcript-download";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { requireRole } from "@/lib/auth/roles";
+import { requireStudentProfile } from "@/lib/auth/roles";
 import { firstParam } from "@/lib/search-params";
 import { getCgpa, getStudentMe, listSemesters } from "@/lib/student/service";
 
@@ -19,7 +19,7 @@ export default async function StudentTranscriptPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  await requireRole("STUDENT");
+  await requireStudentProfile();
   const params = await searchParams;
   const semesterId = firstParam(params.semesterId);
 

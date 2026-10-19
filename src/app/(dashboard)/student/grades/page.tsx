@@ -10,7 +10,7 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
 import { Button } from "@/components/ui/button";
-import { requireRole } from "@/lib/auth/roles";
+import { requireStudentProfile } from "@/lib/auth/roles";
 import {
   getCgpa,
   getGrades,
@@ -43,7 +43,7 @@ function registrationMap(
 }
 
 export default async function StudentGradesPage() {
-  await requireRole("STUDENT");
+  await requireStudentProfile();
 
   const [grades, cgpa, registrations] = await Promise.all([
     getGrades(),

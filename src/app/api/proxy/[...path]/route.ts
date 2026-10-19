@@ -106,12 +106,27 @@ async function requestRefresh(
   }
 }
 
+/**
+ * The backend resolves the session from the accessToken cookie ahead of the
+ * Authorization header, so the auth cookies must not be forwarded: after a
+ * refresh the cookie would still carry the rejected token and shadow the new
+ * bearer token.
+ */
+function withoutAuthCookies(cookieHeader: string | null): string {
+  const cookies = parseCookie(cookieHeader);
+  delete cookies[ACCESS_TOKEN_COOKIE];
+  delete cookies[REFRESH_TOKEN_COOKIE];
+  return Object.entries(cookies)
+    .map(([name, value]) => `${name}=${value}`)
+    .join("; ");
+}
+
 function buildUpstreamHeaders(
   request: NextRequest,
   accessToken: string | undefined,
 ): Headers {
   const headers = filterHeaders(request.headers, REQUEST_STRIPPED);
-  const cookieHeader = request.headers.get("cookie");
+  const cookieHeader = withoutAuthCookies(request.headers.get("cookie"));
   if (cookieHeader) {
     headers.set("cookie", cookieHeader);
   }

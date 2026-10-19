@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { requireRole } from "@/lib/auth/roles";
+import { requireInstructorProfile } from "@/lib/auth/roles";
 import { getMySections, getSectionRoster } from "@/lib/instructor/service";
 import { firstParam } from "@/lib/search-params";
 import { listSemesters } from "@/lib/student/service";
@@ -24,7 +24,7 @@ export default async function MySectionsPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  await requireRole("INSTRUCTOR");
+  await requireInstructorProfile();
   const params = await searchParams;
   const semesterId = firstParam(params.semesterId);
 

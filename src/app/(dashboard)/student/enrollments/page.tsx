@@ -12,7 +12,7 @@ import { TableFilter } from "@/components/shared/table-filter";
 import { TablePagination } from "@/components/shared/table-pagination";
 import { CancelEnrollmentButton } from "@/components/student/cancel-enrollment-button";
 import { Button } from "@/components/ui/button";
-import { requireRole } from "@/lib/auth/roles";
+import { requireStudentProfile } from "@/lib/auth/roles";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { firstParam, readPage } from "@/lib/search-params";
 import { getMyEnrollments, listSemesters } from "@/lib/student/service";
@@ -34,7 +34,7 @@ export default async function StudentEnrollmentsPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  await requireRole("STUDENT");
+  await requireStudentProfile();
   const params = await searchParams;
   const status = firstParam(params.status);
   const semesterId = firstParam(params.semesterId);

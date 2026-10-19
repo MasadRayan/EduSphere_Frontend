@@ -11,7 +11,7 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { TableFilter } from "@/components/shared/table-filter";
 import { TablePagination } from "@/components/shared/table-pagination";
 import { Button } from "@/components/ui/button";
-import { requireRole } from "@/lib/auth/roles";
+import { requireStudentProfile } from "@/lib/auth/roles";
 import { formatCurrency, formatDateTime } from "@/lib/format";
 import { firstParam, readPage } from "@/lib/search-params";
 import { getMyPayments } from "@/lib/student/service";
@@ -36,7 +36,7 @@ export default async function StudentPaymentsPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  await requireRole("STUDENT");
+  await requireStudentProfile();
   const params = await searchParams;
   const status = firstParam(params.status);
   const purpose = firstParam(params.purpose);

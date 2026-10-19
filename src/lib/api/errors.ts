@@ -16,6 +16,20 @@ const AUTH_FAILURE_MESSAGES: Record<string, AuthFailureKind> = {
   "User credentials mismatch. Please log in again.": "credentials",
 };
 
+/**
+ * Session token failures raised while verifying a JWT. The backend auth
+ * middleware surfaces these as HTTP 500 with the jsonwebtoken message, so they
+ * cannot be caught by status code alone: "invalid signature" means the token is
+ * no longer usable (for example the signing secret rotated) and the visitor
+ * should be treated as signed out, not shown a server error.
+ */
+const TOKEN_FAILURE_PATTERNS: RegExp[] = [
+  /^jwt\b/i,
+  /^invalid signature$/i,
+  /^invalid token$/i,
+  /^invalid algorithm$/i,
+];
+
 export class ApiError extends Error {
   readonly status: number;
   readonly kind: ApiErrorKind;
@@ -29,9 +43,9 @@ export class ApiError extends Error {
 }
 
 /**
- * Classifies a backend failure into an auth-aware kind. Handles both proper
- * 401/403 responses and the backend auth-middleware quirk where session
- * failures are reported as HTTP 500 with a known message.
+ * Classifies a backend failure into an auth-aware kind. Handles proper 401/403
+ * responses, the backend auth-middleware quirk where session failures are
+ * reported as HTTP 500 with a known message, and JWT verification failures.
  */
 export function classifyAuthError(
   status: number,
@@ -41,6 +55,9 @@ export function classifyAuthError(
     const byMessage = AUTH_FAILURE_MESSAGES[message];
     if (byMessage) {
       return byMessage;
+    }
+    if (TOKEN_FAILURE_PATTERNS.some((pattern) => pattern.test(message))) {
+      return "unauthenticated";
     }
   }
 

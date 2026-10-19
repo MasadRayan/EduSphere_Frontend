@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { requireRole } from "@/lib/auth/roles";
+import { requireStudentProfile } from "@/lib/auth/roles";
 import { formatDate } from "@/lib/format";
 import { getRegisteredCourseDetail } from "@/lib/student/service";
 
@@ -22,7 +22,7 @@ export default async function StudentCourseDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireRole("STUDENT");
+  await requireStudentProfile();
   const { id } = await params;
   const registration = await getRegisteredCourseDetail(id);
 

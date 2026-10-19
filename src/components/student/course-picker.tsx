@@ -74,29 +74,39 @@ export function CoursePicker({
 
   // Preselect requested courses only when they are actually selectable, so a
   // stale link can never submit a course with no section, missing prerequisites
-  // or a passed deadline.
+  // or a passed deadline. The catalog can send many ids at once, so stop as
+  // soon as the course or credit limit is reached.
   const initialSelection = useMemo(() => {
     if (deadlinePassed || initialCourseIds.length === 0) {
       return new Set<string>();
     }
-    return new Set(
-      initialCourseIds.filter((courseId) => {
-        const course = rows.find((row) => row.id === courseId);
-        if (!course) {
-          return false;
-        }
-        if ((sectionsByCourse.get(courseId) ?? []).length === 0) {
-          return false;
-        }
-        const missingPrerequisite = (course.prerequisites ?? []).some(
-          (item) =>
-            item.prerequisite && !completed.has(item.prerequisite.id ?? ""),
-        );
-        return (
-          !missingPrerequisite && course.creditHours <= MAX_SEMESTER_CREDITS
-        );
-      }),
-    );
+    const selection = new Set<string>();
+    let credits = 0;
+    for (const courseId of initialCourseIds) {
+      if (selection.size >= MAX_ENROLLMENT_COURSES) {
+        break;
+      }
+      const course = rows.find((row) => row.id === courseId);
+      if (!course) {
+        continue;
+      }
+      if ((sectionsByCourse.get(courseId) ?? []).length === 0) {
+        continue;
+      }
+      const missingPrerequisite = (course.prerequisites ?? []).some(
+        (item) =>
+          item.prerequisite && !completed.has(item.prerequisite.id ?? ""),
+      );
+      if (missingPrerequisite) {
+        continue;
+      }
+      if (credits + course.creditHours > MAX_SEMESTER_CREDITS) {
+        continue;
+      }
+      selection.add(courseId);
+      credits += course.creditHours;
+    }
+    return selection;
   }, [deadlinePassed, initialCourseIds, rows, sectionsByCourse, completed]);
 
   const [selected, setSelected] = useState<Set<string>>(initialSelection);

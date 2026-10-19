@@ -6,7 +6,7 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
 import { TableFilter } from "@/components/shared/table-filter";
-import { requireRole } from "@/lib/auth/roles";
+import { requireInstructorProfile } from "@/lib/auth/roles";
 import {
   getMySections,
   getSectionRoster,
@@ -21,7 +21,7 @@ export default async function AttendancePage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  await requireRole("INSTRUCTOR");
+  await requireInstructorProfile();
   const params = await searchParams;
   const courseSectionId = firstParam(params.courseSectionId);
   const date = firstParam(params.date);

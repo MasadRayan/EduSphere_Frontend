@@ -6,13 +6,18 @@ import {
 } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
 import { TableFilter } from "@/components/shared/table-filter";
+import {
+  CourseRegistrationSection,
+  CourseRegistrationSkeleton,
+} from "@/components/student/course-registration";
 import { DashboardCharts } from "@/components/student/dashboard-charts";
 import { Button } from "@/components/ui/button";
-import { requireRole } from "@/lib/auth/roles";
+import { requireStudentProfile } from "@/lib/auth/roles";
 import { formatCurrency } from "@/lib/format";
 import { firstParam } from "@/lib/search-params";
 import { getStudentAnalytics, listSemesters } from "@/lib/student/service";
@@ -24,7 +29,7 @@ export default async function StudentDashboardPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  await requireRole("STUDENT");
+  await requireStudentProfile();
   const params = await searchParams;
   const semesterId = firstParam(params.semesterId);
 
@@ -101,6 +106,10 @@ export default async function StudentDashboardPage({
           <DashboardCharts analytics={analytics} />
         </>
       )}
+
+      <Suspense fallback={<CourseRegistrationSkeleton />}>
+        <CourseRegistrationSection variant="dashboard" />
+      </Suspense>
     </div>
   );
 }

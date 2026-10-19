@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { endpoints } from "@/lib/api/endpoints";
+import { classifyAuthError } from "@/lib/api/errors";
 import {
   ACCESS_TOKEN_COOKIE,
   ACCESS_TOKEN_MAX_AGE,
@@ -51,18 +52,49 @@ async function refreshSession(
   }
 }
 
+function setTokensOnResponse(response: NextResponse, tokens: AuthTokens): void {
+  response.cookies.set(
+    ACCESS_TOKEN_COOKIE,
+    tokens.accessToken,
+    authCookieOptions(ACCESS_TOKEN_MAX_AGE),
+  );
+  response.cookies.set(
+    REFRESH_TOKEN_COOKIE,
+    tokens.refreshToken,
+    authCookieOptions(REFRESH_TOKEN_MAX_AGE),
+  );
+}
+
+function clearTokensOnResponse(response: NextResponse): void {
+  response.cookies.delete(ACCESS_TOKEN_COOKIE);
+  response.cookies.delete(REFRESH_TOKEN_COOKIE);
+}
+
+type TokenStatus = "valid" | "invalid" | "unknown";
+
 /**
- * Forwards the current path to Server Components as a request header so
- * layouts can make routing decisions (for example the student approval gate)
- * without a client round trip.
+ * Asks the backend whether an access token is still accepted. A token can look
+ * well-formed (its role claim is readable offline) yet fail verification
+ * because it expired or was signed with a previous secret.
  */
-function nextWithPathname(
-  request: NextRequest,
-  pathname: string,
-): NextResponse {
-  const headers = new Headers(request.headers);
-  headers.set("x-pathname", pathname);
-  return NextResponse.next({ request: { headers } });
+async function checkAccessToken(accessToken: string): Promise<TokenStatus> {
+  if (!API_URL) {
+    return "unknown";
+  }
+  try {
+    const response = await fetch(`${API_URL}${endpoints.auth.me}`, {
+      headers: { cookie: `${ACCESS_TOKEN_COOKIE}=${accessToken}` },
+      cache: "no-store",
+    });
+    if (response.ok) {
+      return "valid";
+    }
+    const body = (await response.json()) as ApiEnvelope<unknown>;
+    const authKind = classifyAuthError(response.status, body.message);
+    return authKind === "unauthenticated" ? "invalid" : "unknown";
+  } catch {
+    return "unknown";
+  }
 }
 
 export async function proxy(request: NextRequest) {
@@ -73,11 +105,30 @@ export async function proxy(request: NextRequest) {
 
   if (accessToken) {
     if (isAuthPage) {
+      // Only bounce a genuinely signed-in visitor. A token the backend rejects
+      // would otherwise loop: this page sends them to their dashboard and the
+      // dashboard sends them straight back here.
+      if ((await checkAccessToken(accessToken)) === "invalid") {
+        const tokens = refreshToken ? await refreshSession(refreshToken) : null;
+        if (tokens) {
+          const role =
+            decodeRoleFromAccessToken(tokens.accessToken) ??
+            decodeRoleFromAccessToken(accessToken);
+          const response = NextResponse.redirect(
+            new URL(role ? homePathForRole(role) : "/", request.url),
+          );
+          setTokensOnResponse(response, tokens);
+          return response;
+        }
+        const response = NextResponse.next();
+        clearTokensOnResponse(response);
+        return response;
+      }
       const role = decodeRoleFromAccessToken(accessToken);
       const destination = role ? homePathForRole(role) : "/";
       return NextResponse.redirect(new URL(destination, request.url));
     }
-    return nextWithPathname(request, pathname);
+    return NextResponse.next();
   }
 
   if (isAuthPage) {
@@ -87,17 +138,8 @@ export async function proxy(request: NextRequest) {
   if (refreshToken) {
     const tokens = await refreshSession(refreshToken);
     if (tokens) {
-      const response = nextWithPathname(request, pathname);
-      response.cookies.set(
-        ACCESS_TOKEN_COOKIE,
-        tokens.accessToken,
-        authCookieOptions(ACCESS_TOKEN_MAX_AGE),
-      );
-      response.cookies.set(
-        REFRESH_TOKEN_COOKIE,
-        tokens.refreshToken,
-        authCookieOptions(REFRESH_TOKEN_MAX_AGE),
-      );
+      const response = NextResponse.next();
+      setTokensOnResponse(response, tokens);
       return response;
     }
   }

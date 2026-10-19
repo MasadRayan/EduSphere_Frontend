@@ -1,10 +1,36 @@
 import Link from "next/link";
 import { CourseCodeTag } from "@/components/shared/course-code-tag";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Course } from "@/types/entities";
+import { SelectableCourseCard } from "./selectable-course-card";
 
-export function CourseCard({ course }: { course: Course }) {
-  const prerequisiteCount = course.prerequisites?.length ?? 0;
+export type CourseCardStatus = "enrolled" | "completed" | "not-offered";
+
+const STATUS_LABELS: Record<CourseCardStatus, string> = {
+  enrolled: "Registered",
+  completed: "Completed",
+  "not-offered": "Not offered",
+};
+
+/**
+ * One catalog card with two personalities: an approved student gets a
+ * checkbox (SelectableCourseCard), everyone else gets a plain link. Courses the
+ * student already holds, or that have no section this semester, stay
+ * browse-only with a status badge.
+ */
+export function CourseCard({
+  course,
+  selectable,
+  status,
+}: {
+  course: Course;
+  selectable: boolean;
+  status?: CourseCardStatus;
+}) {
+  if (selectable && !status) {
+    return <SelectableCourseCard course={course} />;
+  }
 
   return (
     <Link
@@ -13,7 +39,12 @@ export function CourseCard({ course }: { course: Course }) {
     >
       <Card className="h-full transition-colors group-hover:ring-primary/40">
         <CardHeader>
-          <CourseCodeTag code={course.code} credits={course.creditHours} />
+          <div className="flex items-start justify-between gap-3">
+            <CourseCodeTag code={course.code} credits={course.creditHours} />
+            {status ? (
+              <Badge variant="outline">{STATUS_LABELS[status]}</Badge>
+            ) : null}
+          </div>
           <CardTitle className="font-display text-base">
             {course.title}
           </CardTitle>
@@ -23,9 +54,7 @@ export function CourseCard({ course }: { course: Course }) {
             {course.department?.name}
           </span>
           <span className="font-mono text-xs text-muted-foreground">
-            {prerequisiteCount > 0
-              ? `${prerequisiteCount} prerequisite${prerequisiteCount === 1 ? "" : "s"}`
-              : "No prerequisites"}
+            {course.creditHours} credits
           </span>
         </CardContent>
       </Card>

@@ -347,6 +347,7 @@ The **course code tag**: a mono code in a bordered tag, used on every course car
 - [x] Gating UI for pending/rejected applicants
 - [x] Profile update and avatar upload
 - [x] Course picker (max 20, credit limit feedback, prerequisite errors shown per course) then Enroll
+- [x] Multi-course selection from the catalog and the student dashboard (selection carries into the enroll picker)
 - [x] bKash redirect, `payment-result` page (success and failure states, link to enrollment)
 - [x] My enrollments (filter by status/semester), cancel with refund confirmation
 - [x] My payments
@@ -457,7 +458,7 @@ Full rules live in `AGENTS.md` (Definition of Done). After finishing ANY task, t
 ### Phase 1: Foundation
 - [ ] All shadcn components installed and the demo page renders them in both themes
 - [ ] Proxy forwards GET/POST/PATCH/DELETE, multipart upload works, PDF streams
-- [ ] Expired access token is refreshed once and the original request succeeds
+- [x] Expired access token is refreshed once and the original request succeeds
 - [ ] Backend 500 auth messages map to the right redirect/error
 
 ### Phase 2: Auth

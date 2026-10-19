@@ -18,7 +18,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ApiError } from "@/lib/api/errors";
-import { requireRole } from "@/lib/auth/roles";
+import { requireStudentProfile } from "@/lib/auth/roles";
 import { formatDate } from "@/lib/format";
 import { getGradeDetail } from "@/lib/student/service";
 import type { GradeDetail } from "@/types/entities";
@@ -30,7 +30,7 @@ export default async function StudentGradeDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireRole("STUDENT");
+  await requireStudentProfile();
   const { id } = await params;
 
   let detail: GradeDetail;

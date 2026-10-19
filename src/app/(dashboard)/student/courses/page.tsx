@@ -10,7 +10,7 @@ import { PageHeader } from "@/components/shared/page-header";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { TableFilter } from "@/components/shared/table-filter";
 import { Button } from "@/components/ui/button";
-import { requireRole } from "@/lib/auth/roles";
+import { requireStudentProfile } from "@/lib/auth/roles";
 import { formatDate } from "@/lib/format";
 import { firstParam } from "@/lib/search-params";
 import { getRegisteredCourses } from "@/lib/student/service";
@@ -21,7 +21,7 @@ export default async function StudentCoursesPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  await requireRole("STUDENT");
+  await requireStudentProfile();
   const params = await searchParams;
   const semesterId = firstParam(params.semesterId);
   const status = firstParam(params.status);

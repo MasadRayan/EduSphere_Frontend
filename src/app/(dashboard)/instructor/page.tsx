@@ -5,7 +5,7 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
 import { TableFilter } from "@/components/shared/table-filter";
-import { requireRole } from "@/lib/auth/roles";
+import { requireInstructorProfile } from "@/lib/auth/roles";
 import { getInstructorAnalytics } from "@/lib/instructor/service";
 import { firstParam } from "@/lib/search-params";
 import { listSemesters } from "@/lib/student/service";
@@ -17,7 +17,7 @@ export default async function InstructorDashboardPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  await requireRole("INSTRUCTOR");
+  await requireInstructorProfile();
   const params = await searchParams;
   const semesterId = firstParam(params.semesterId);
 

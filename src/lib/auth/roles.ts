@@ -25,3 +25,30 @@ export async function requireRole(...roles: Role[]): Promise<SessionUser> {
 
   return user;
 }
+
+/**
+ * Page-level approval gate. A student without an approved profile only sees the
+ * application and profile screens. This lives on each page, not the segment
+ * layout: a layout redirect to a sibling route fires mid-stream on a client
+ * navigation and makes the router refetch the target forever.
+ */
+export async function requireStudentProfile(): Promise<SessionUser> {
+  const user = await requireRole("STUDENT");
+
+  if (!user.studentProfile) {
+    redirect("/student/apply");
+  }
+
+  return user;
+}
+
+/** Instructor equivalent of {@link requireStudentProfile}. */
+export async function requireInstructorProfile(): Promise<SessionUser> {
+  const user = await requireRole("INSTRUCTOR");
+
+  if (!user.instructorProfile) {
+    redirect("/instructor/apply");
+  }
+
+  return user;
+}

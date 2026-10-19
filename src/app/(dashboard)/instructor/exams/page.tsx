@@ -12,7 +12,7 @@ import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
 import { TableFilter } from "@/components/shared/table-filter";
 import { Button } from "@/components/ui/button";
-import { requireRole } from "@/lib/auth/roles";
+import { requireInstructorProfile } from "@/lib/auth/roles";
 import { formatDate } from "@/lib/format";
 import { deleteExamAction, saveExamAction } from "@/lib/instructor/actions";
 import { getMySections, listSectionExams } from "@/lib/instructor/service";
@@ -25,7 +25,7 @@ export default async function ExamsPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  await requireRole("INSTRUCTOR");
+  await requireInstructorProfile();
   const params = await searchParams;
   const courseSectionId = Array.isArray(params.courseSectionId)
     ? params.courseSectionId[0]
