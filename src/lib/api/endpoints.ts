@@ -50,6 +50,10 @@ export const endpoints = {
     base: "/api/payments",
     mine: "/api/payments/my",
   },
+  invoices: {
+    base: "/api/invoices",
+    enrollment: "/api/invoices/enrollments",
+  },
   exams: "/api/exams",
   attendance: "/api/attendance",
   results: "/api/results",
@@ -76,6 +80,7 @@ export const PROXY_ALLOWED_PREFIXES = [
   "/api/course-sections",
   "/api/student-sections",
   "/api/course-registrations",
+  "/api/invoices",
   "/api/payments",
   "/api/exams",
   "/api/attendance",

@@ -53,7 +53,7 @@ export function InvoiceDownloadButton({
     setPending(true);
     try {
       const response = await apiClient.raw(
-        `${endpoints.courseRegistrations.base}/${enrollmentId}/invoice`,
+        `${endpoints.invoices.enrollment}/${enrollmentId}`,
         { method: "GET", responseType: "arrayBuffer" },
       );
 

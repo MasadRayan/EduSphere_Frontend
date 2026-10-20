@@ -45,12 +45,18 @@ export default async function StudentAttendancePage() {
       {groups.length === 0 ? (
         <EmptyState
           icon={CalendarCheck}
-          title="No attendance records yet"
-          description="Instructors mark attendance against course sections. Records show up here once your classes begin."
+          title="No attendance recorded yet"
+          description="Instructors mark attendance against course sections. Records appear here after the first class is recorded."
           action={
-            <Button asChild>
-              <Link href="/student/enroll">Enroll in courses</Link>
-            </Button>
+            registrations.length === 0 ? (
+              <Button asChild>
+                <Link href="/student/enroll">Enroll in courses</Link>
+              </Button>
+            ) : (
+              <Button asChild variant="outline">
+                <Link href="/student/courses">View my courses</Link>
+              </Button>
+            )
           }
         />
       ) : (
