@@ -133,6 +133,12 @@ export async function getMyEnrollments(
   return normalizePage(envelope.data, envelope.meta as PaginationMeta);
 }
 
+export function getMyEnrollment(id: string): Promise<SemesterEnrollment> {
+  return serverFetchData<SemesterEnrollment>(
+    `${endpoints.courseRegistrations.base}/${id}`,
+  );
+}
+
 export async function getMyPayments(
   params: PaymentQuery = {},
 ): Promise<PaymentPage> {

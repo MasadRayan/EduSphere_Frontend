@@ -1,7 +1,14 @@
-import { CircleCheck, CircleX } from "lucide-react";
+import { AlertCircle, CircleCheck, CircleX } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { PageHeader } from "@/components/shared/page-header";
+import {
+  EnrollmentInvoice,
+  EnrollmentInvoiceSkeleton,
+} from "@/components/student/enrollment-invoice";
+import { InvoiceDownloadButton } from "@/components/student/invoice-download-button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,6 +18,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { requireStudentProfile } from "@/lib/auth/roles";
+import { getMyEnrollment } from "@/lib/student/service";
+import type { SemesterEnrollment } from "@/types/entities";
 
 export const metadata: Metadata = { title: "Payment result" };
 
@@ -75,7 +84,7 @@ export default async function PaymentResultPage({
           </CardTitle>
           <CardDescription>
             {success
-              ? "Your enrollment is confirmed once the payment settles."
+              ? "Your enrollment is confirmed and your invoice is ready."
               : payment
                 ? reasonText(status, reason)
                 : "This page has no payment result attached. Check the link you followed or go to your enrollments."}
@@ -111,6 +120,64 @@ export default async function PaymentResultPage({
           </div>
         </CardContent>
       </Card>
+
+      {success && enrollmentId ? (
+        <Suspense
+          fallback={
+            <div className="mx-auto w-full max-w-2xl">
+              <EnrollmentInvoiceSkeleton />
+            </div>
+          }
+        >
+          <InvoiceSection enrollmentId={enrollmentId} />
+        </Suspense>
+      ) : null}
+    </div>
+  );
+}
+
+/**
+ * Streams the invoice in after the confirmation card is already on screen. The
+ * backend enforces ownership, so a tampered enrollment id simply fails here and
+ * the student gets a readable fallback instead of a broken page.
+ */
+async function InvoiceSection({ enrollmentId }: { enrollmentId: string }) {
+  let enrollment: SemesterEnrollment;
+
+  try {
+    enrollment = await getMyEnrollment(enrollmentId);
+  } catch {
+    return (
+      <div className="mx-auto w-full max-w-2xl">
+        <Alert>
+          <AlertCircle className="size-4" />
+          <AlertTitle>Invoice unavailable</AlertTitle>
+          <AlertDescription>
+            We could not load the invoice for this payment. Open{" "}
+            <Link
+              href="/student/enrollments"
+              className="font-medium underline underline-offset-4"
+            >
+              My enrollments
+            </Link>{" "}
+            to view the enrollment details.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mx-auto w-full max-w-2xl">
+      <EnrollmentInvoice
+        enrollment={enrollment}
+        actions={
+          <InvoiceDownloadButton
+            enrollmentId={enrollment.id}
+            invoiceNumber={enrollment.payment?.merchantInvoiceNumber}
+          />
+        }
+      />
     </div>
   );
 }

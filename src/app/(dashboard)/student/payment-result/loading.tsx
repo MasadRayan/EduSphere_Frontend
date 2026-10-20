@@ -1,3 +1,4 @@
+import { EnrollmentInvoiceSkeleton } from "@/components/student/enrollment-invoice";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function PaymentResultLoading() {
@@ -20,6 +21,9 @@ export default function PaymentResultLoading() {
             <Skeleton className="h-9 flex-1" />
           </div>
         </div>
+      </div>
+      <div className="mx-auto w-full max-w-2xl">
+        <EnrollmentInvoiceSkeleton />
       </div>
     </div>
   );

@@ -244,6 +244,7 @@ export interface SemesterEnrollment {
   student?: {
     id: string;
     studentId: string;
+    fullName: string;
     user: { name: string; email: string };
   };
 }

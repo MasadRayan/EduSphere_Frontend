@@ -98,6 +98,14 @@ export default async function StudentEnrollmentsPage({
       cellClassName: "text-right",
       cell: (enrollment) => (
         <div className="flex items-center justify-end gap-2">
+          {enrollment.payment?.status === "SUCCEEDED" ||
+          enrollment.payment?.status === "REFUNDED" ? (
+            <Button asChild variant="ghost" size="sm">
+              <Link href={`/student/enrollments/${enrollment.id}/invoice`}>
+                Invoice
+              </Link>
+            </Button>
+          ) : null}
           {enrollment.status === "ENROLLED" ? (
             <CancelEnrollmentButton
               enrollmentId={enrollment.id}

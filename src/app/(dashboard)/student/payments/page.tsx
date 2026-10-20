@@ -95,6 +95,24 @@ export default async function StudentPaymentsPage({
         </span>
       ),
     },
+    {
+      id: "actions",
+      header: <span className="sr-only">Actions</span>,
+      headClassName: "text-right",
+      cellClassName: "text-right",
+      cell: (payment) =>
+        payment.purpose === "REGISTRATION_FEE" &&
+        payment.semesterEnrollmentId &&
+        ["SUCCEEDED", "REFUNDED"].includes(payment.status) ? (
+          <Button asChild variant="ghost" size="sm">
+            <Link
+              href={`/student/enrollments/${payment.semesterEnrollmentId}/invoice`}
+            >
+              Invoice
+            </Link>
+          </Button>
+        ) : null,
+    },
   ];
 
   return (
