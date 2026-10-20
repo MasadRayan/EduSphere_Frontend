@@ -64,7 +64,7 @@ export default async function AttendancePage({
     <div className="space-y-6">
       <PageHeader
         title="Attendance"
-        description="Pick a section and a class date, mark each student and save. Saving the same date again overwrites it."
+        description="Pick a section and a class date, mark students individually or in bulk, then save. Saving the same date again overwrites it."
       />
 
       <div className="flex flex-wrap gap-2">
@@ -99,8 +99,8 @@ export default async function AttendancePage({
       ) : roster.length === 0 ? (
         <EmptyState
           icon={CalendarCheck}
-          title="No students in this section yet"
-          description="Students appear here once attendance or results exist for them in this section."
+          title="No students enrolled in this section yet"
+          description="Students appear here once they enroll in this section."
         />
       ) : (
         <>

@@ -89,12 +89,13 @@ export function getExamResults(examId: string): Promise<InstructorResultRow[]> {
 }
 
 /**
- * The API has no roster endpoint, so we derive a section's students from the
- * two instructor-readable sources: attendance records and results.
+ * The roster comes from the section students endpoint, which reads course
+ * registrations. Attendance and result rows are no longer used to guess who is
+ * enrolled, so a student appears before their first class is recorded.
  *
- * The top-level `studentId` on those rows is the StudentProfile id that
- * enrollment checks use, while the nested `student.studentId` is the display
- * code (STU-2023-0001). The profile id is what POST bodies must carry.
+ * The top-level `studentId` on attendance and result rows is the StudentProfile
+ * id that enrollment checks use, while the nested `student.studentId` is the
+ * display code (STU-2023-0001). The profile id is what POST bodies must carry.
  */
 export interface RosterEntry {
   profileId: string;
@@ -104,27 +105,12 @@ export interface RosterEntry {
 export async function getSectionRoster(
   courseSectionId: string,
 ): Promise<RosterEntry[]> {
-  const [attendance, results] = await Promise.all([
-    listSectionAttendance(courseSectionId),
-    listSectionResults(courseSectionId),
-  ]);
+  const data = await serverFetchData<{ students: SectionStudent[] }>(
+    `${endpoints.courseSections}/${courseSectionId}/students`,
+  );
 
-  const roster = new Map<string, RosterEntry>();
-  for (const record of attendance) {
-    if (record.studentId && record.student) {
-      roster.set(record.studentId, {
-        profileId: record.studentId,
-        student: record.student,
-      });
-    }
-  }
-  for (const result of results) {
-    if (result.studentId && result.student) {
-      roster.set(result.studentId, {
-        profileId: result.studentId,
-        student: result.student,
-      });
-    }
-  }
-  return [...roster.values()];
+  return data.students.map((student) => ({
+    profileId: student.id,
+    student,
+  }));
 }

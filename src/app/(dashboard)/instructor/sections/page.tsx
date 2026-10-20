@@ -61,7 +61,7 @@ export default async function MySectionsPage({
         <StatCard
           label="Students found"
           value={totalStudents}
-          hint="From attendance and results records"
+          hint="From course registrations"
           icon={Users}
           tone="success"
         />
@@ -139,8 +139,8 @@ export default async function MySectionsPage({
                       <AccordionContent>
                         {roster.length === 0 ? (
                           <p className="rounded-lg border border-dashed border-border bg-card/60 px-4 py-6 text-center text-sm text-muted-foreground">
-                            No student records yet. Students appear here once
-                            attendance is marked or results are entered.
+                            No students enrolled yet. Students appear here once
+                            they enroll in this section.
                           </p>
                         ) : (
                           <ul className="grid gap-2 sm:grid-cols-2">

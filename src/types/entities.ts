@@ -392,6 +392,8 @@ export interface InstructorMe extends User {
 }
 
 export interface SectionStudent {
+  /** StudentProfile id used for attendance and result payloads. */
+  id: string;
   /** Student ID code like STU-2023-0001. */
   studentId: string;
   user: { name: string; email: string; imageURL: string | null };

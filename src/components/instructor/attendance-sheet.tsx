@@ -6,6 +6,8 @@ import { FormError } from "@/components/auth/form-error";
 import { FormField } from "@/components/shared/form-field";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { SubmitButton } from "@/components/shared/submit-button";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -76,6 +78,66 @@ export function AttendanceSheet({
 
   const alreadyMarked = rows.some((row) => row.existingStatus);
 
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkStatus, setBulkStatus] = useState<AttendanceStatus>("PRESENT");
+
+  const allSelected = rows.length > 0 && selected.size === rows.length;
+  const someSelected = selected.size > 0 && !allSelected;
+
+  const toggleAll = (checked: boolean | "indeterminate") => {
+    setSelected(
+      checked === true ? new Set(rows.map((row) => row.studentId)) : new Set(),
+    );
+  };
+
+  const toggleRow = (studentId: string, checked: boolean | "indeterminate") => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (checked === true) {
+        next.add(studentId);
+      } else {
+        next.delete(studentId);
+      }
+      return next;
+    });
+  };
+
+  const applyBulkStatus = () => {
+    if (selected.size === 0) {
+      return;
+    }
+
+    setStatuses((prev) => {
+      const next = { ...prev };
+      for (const studentId of selected) {
+        next[studentId] = bulkStatus;
+      }
+      return next;
+    });
+
+    toast.success(
+      `Marked ${selected.size} ${
+        selected.size === 1 ? "student" : "students"
+      } as ${STATUS_LABELS[bulkStatus]}`,
+    );
+  };
+
+  const markAllPresent = () => {
+    setSelected(new Set(rows.map((row) => row.studentId)));
+    setStatuses((prev) => {
+      const next = { ...prev };
+      for (const row of rows) {
+        next[row.studentId] = "PRESENT";
+      }
+      return next;
+    });
+    toast.success(
+      `Marked all ${rows.length} ${
+        rows.length === 1 ? "student" : "students"
+      } as Present`,
+    );
+  };
+
   const today = new Date().toISOString().slice(0, 10);
 
   return (
@@ -106,10 +168,79 @@ export function AttendanceSheet({
         </p>
       </div>
 
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-3 rounded-xl border border-border bg-card px-4 py-3">
+        <p className="text-sm">
+          <span className="font-medium">{selected.size}</span>{" "}
+          <span className="text-muted-foreground">
+            of {rows.length} selected
+          </span>
+        </p>
+        <p className="text-xs text-muted-foreground">
+          Selection only changes the status. Saving records every student in the
+          section.
+        </p>
+        <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
+          <Select
+            value={bulkStatus}
+            onValueChange={(value) => setBulkStatus(value as AttendanceStatus)}
+          >
+            <SelectTrigger
+              className="w-36"
+              aria-label="Status to apply to selected students"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {ATTENDANCE_STATUSES.map((status) => (
+                <SelectItem key={status} value={status}>
+                  {STATUS_LABELS[status]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={applyBulkStatus}
+            disabled={selected.size === 0}
+          >
+            Apply
+          </Button>
+          {selected.size > 0 ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setSelected(new Set())}
+            >
+              Clear
+            </Button>
+          ) : null}
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={markAllPresent}
+          >
+            Mark all present
+          </Button>
+        </div>
+      </div>
+
       <div className="overflow-hidden rounded-xl border border-border bg-card">
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/40 hover:bg-muted/40">
+              <TableHead className="w-10">
+                <Checkbox
+                  checked={
+                    allSelected ? true : someSelected ? "indeterminate" : false
+                  }
+                  onCheckedChange={toggleAll}
+                  aria-label="Select all students"
+                />
+              </TableHead>
               <TableHead>Student</TableHead>
               <TableHead>Recorded</TableHead>
               <TableHead className="w-40">Mark</TableHead>
@@ -117,7 +248,21 @@ export function AttendanceSheet({
           </TableHeader>
           <TableBody>
             {rows.map((row) => (
-              <TableRow key={row.studentId}>
+              <TableRow
+                key={row.studentId}
+                className={
+                  selected.has(row.studentId) ? "bg-muted/30" : undefined
+                }
+              >
+                <TableCell>
+                  <Checkbox
+                    checked={selected.has(row.studentId)}
+                    onCheckedChange={(checked) =>
+                      toggleRow(row.studentId, checked)
+                    }
+                    aria-label={`Select ${row.name}`}
+                  />
+                </TableCell>
                 <TableCell>
                   <input
                     type="hidden"
