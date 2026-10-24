@@ -20,6 +20,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { MAX_SEMESTER_CREDITS } from "@/lib/constants";
 
 const HERO_COURSES = [
   {
@@ -33,6 +34,12 @@ const HERO_COURSES = [
 ];
 
 const HERO_STAGES = ["Apply", "Enroll", "Pay", "Graduate"];
+
+const HERO_CREDITS = HERO_COURSES.reduce(
+  (total, course) => total + course.credits,
+  0,
+);
+const HERO_CREDIT_SHARE = `${Math.round((HERO_CREDITS / MAX_SEMESTER_CREDITS) * 100)}%`;
 
 const STEPS = [
   {
@@ -65,18 +72,21 @@ const STEPS = [
 const ROLES = [
   {
     icon: UserRound,
+    desk: "Student desk",
     title: "For students",
     body: "Apply, enroll and pay in one place, then follow grades and attendance term by term.",
     points: ["Course enrollment", "bKash payments", "Grades and CGPA"],
   },
   {
     icon: Users,
+    desk: "Faculty desk",
     title: "For instructors",
     body: "See the students in your sections, mark attendance and enter results in bulk.",
     points: ["My sections", "Bulk attendance", "Exam results"],
   },
   {
     icon: UserRoundCog,
+    desk: "Registry desk",
     title: "For administrators",
     body: "Review applications, run programs and courses, and keep an eye on the numbers.",
     points: [
@@ -155,7 +165,7 @@ export default async function HomePage({
           aria-hidden="true"
           className="ledger-paper pointer-events-none absolute inset-0 -z-10 opacity-70 [mask-image:linear-gradient(to_bottom,black,transparent_75%)]"
         />
-        <div className="mx-auto grid w-full max-w-7xl items-center gap-12 px-4 py-16 md:grid-cols-2 md:py-24">
+        <div className="mx-auto grid w-full max-w-7xl items-center gap-12 px-4 py-16 md:py-24 lg:grid-cols-2">
           <div className="space-y-6">
             <p className="reveal font-mono text-xs tracking-[0.2em] text-primary uppercase">
               The registrar, online
@@ -169,10 +179,13 @@ export default async function HomePage({
               attendance and results, all on one record.
             </p>
             <div className="reveal reveal-3 flex flex-wrap items-center gap-3">
-              <Button asChild size="lg">
+              <Button asChild size="lg" className="group">
                 <Link href="/register">
                   Create your account
-                  <ArrowRight className="size-4" aria-hidden="true" />
+                  <ArrowRight
+                    className="size-4 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transform-none"
+                    aria-hidden="true"
+                  />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
@@ -192,7 +205,7 @@ export default async function HomePage({
           </div>
 
           <div className="reveal reveal-2">
-            <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+            <div className="hero-sheet overflow-hidden rounded-2xl border border-border bg-card shadow-xl shadow-ink/5">
               <div className="flex items-center justify-between gap-3 border-b border-border bg-muted/40 px-5 py-3">
                 <span className="font-mono text-xs tracking-widest text-muted-foreground uppercase">
                   Fall 2026 · Registration
@@ -200,12 +213,19 @@ export default async function HomePage({
                 <StatusBadge status="ENROLLED" />
               </div>
               <div className="divide-y divide-border">
-                {HERO_COURSES.map((course) => (
+                {HERO_COURSES.map((course, index) => (
                   <div
                     key={course.code}
-                    className="flex items-center justify-between gap-4 px-5 py-3.5"
+                    className="ledger-row flex items-center justify-between gap-3 px-5 py-3.5"
+                    style={{ animationDelay: `${520 + index * 120}ms` }}
                   >
                     <div className="flex items-center gap-3">
+                      <span
+                        className="hidden w-4 font-mono text-[10px] tabular-nums text-muted-foreground/70 sm:inline"
+                        aria-hidden="true"
+                      >
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
                       <CourseCodeTag
                         code={course.code}
                         credits={course.credits}
@@ -214,24 +234,54 @@ export default async function HomePage({
                         {course.title}
                       </span>
                     </div>
-                    <span className="font-mono text-xs text-muted-foreground">
+                    <span className="font-mono text-xs whitespace-nowrap text-muted-foreground">
                       {course.section}
                     </span>
                   </div>
                 ))}
               </div>
-              <div className="flex items-center justify-between border-t border-border px-5 py-3">
-                <span className="text-sm text-muted-foreground">
-                  Total credits
-                </span>
-                <span className="font-mono text-sm font-semibold">8</span>
-              </div>
-              <div className="flex items-center gap-2 border-t border-border bg-warning/10 px-5 py-3 text-xs text-foreground">
-                <span
-                  className="size-1.5 rounded-full bg-warning"
+              <div
+                className="ledger-rise border-t border-border px-5 py-4"
+                style={{ animationDelay: "960ms" }}
+              >
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="text-sm text-muted-foreground">
+                    Credit load
+                  </span>
+                  <span className="font-mono text-sm font-semibold tabular-nums">
+                    {HERO_CREDITS}{" "}
+                    <span className="text-muted-foreground">
+                      / {MAX_SEMESTER_CREDITS}
+                    </span>
+                  </span>
+                </div>
+                <div
+                  className="mt-2 h-1 overflow-hidden rounded-full bg-muted"
                   aria-hidden="true"
-                />
-                Payment due 15 Aug 2026
+                >
+                  <div
+                    className="ledger-bar h-full rounded-full bg-primary"
+                    style={{ width: HERO_CREDIT_SHARE }}
+                  />
+                </div>
+              </div>
+              <div
+                className="ledger-rise flex items-center justify-between gap-3 border-t border-border bg-warning/10 px-5 py-3.5"
+                style={{ animationDelay: "1580ms" }}
+              >
+                <span className="flex items-center gap-2 text-xs text-foreground">
+                  <span
+                    className="size-1.5 rounded-full bg-warning"
+                    aria-hidden="true"
+                  />
+                  Payment due 15 Aug 2026
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="ledger-stamp inline-flex items-center rounded-sm border-2 border-success/60 px-2.5 py-1 font-mono text-[10px] font-bold tracking-[0.16em] text-success uppercase ring-1 ring-success/25 ring-inset"
+                >
+                  Enrolled
+                </span>
               </div>
             </div>
           </div>
@@ -243,7 +293,7 @@ export default async function HomePage({
         className="scroll-mt-20 border-b border-border"
       >
         <div className="mx-auto grid w-full max-w-7xl gap-12 px-4 py-16 md:py-24 lg:grid-cols-[0.85fr_1.15fr]">
-          <div className="space-y-4 self-start lg:sticky lg:top-24">
+          <div className="scroll-reveal space-y-4 self-start lg:sticky lg:top-24">
             <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
               How it works
             </p>
@@ -254,17 +304,24 @@ export default async function HomePage({
               Every step writes to the same student record, so nothing is
               re-entered and nothing is lost between offices.
             </p>
-            <Button asChild variant="outline">
+            <Button asChild variant="outline" className="group">
               <Link href="/register">
                 Start your application
-                <ArrowRight className="size-4" aria-hidden="true" />
+                <ArrowRight
+                  className="size-4 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transform-none"
+                  aria-hidden="true"
+                />
               </Link>
             </Button>
           </div>
 
           <ol className="relative border-l border-border pl-8">
+            <span aria-hidden="true" className="step-rail-fill" />
             {STEPS.map((step) => (
-              <li key={step.no} className="relative pb-10 last:pb-0">
+              <li
+                key={step.no}
+                className="scroll-reveal relative pb-10 last:pb-0"
+              >
                 <span
                   className="absolute top-0 -left-8 flex size-8 -translate-x-1/2 items-center justify-center rounded-full border border-border bg-card font-mono text-xs font-medium text-primary"
                   aria-hidden="true"
@@ -285,7 +342,7 @@ export default async function HomePage({
 
       <section className="border-b border-border bg-card">
         <div className="mx-auto w-full max-w-7xl space-y-10 px-4 py-16 md:py-24">
-          <div className="space-y-4">
+          <div className="scroll-reveal space-y-4">
             <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
               Built for every role
             </p>
@@ -297,11 +354,16 @@ export default async function HomePage({
             {ROLES.map((role) => (
               <div
                 key={role.title}
-                className="flex flex-col gap-4 rounded-2xl border border-border bg-background p-6"
+                className="scroll-reveal group flex flex-col gap-4 rounded-2xl border border-border bg-background p-6 transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0"
               >
-                <span className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <role.icon className="size-5" aria-hidden="true" />
-                </span>
+                <div className="flex items-center justify-between gap-3 border-b border-border pb-4">
+                  <span className="font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
+                    {role.desk}
+                  </span>
+                  <span className="flex size-8 items-center justify-center rounded-md bg-primary/10 text-primary transition-colors duration-200 group-hover:bg-primary group-hover:text-primary-foreground motion-reduce:transition-none">
+                    <role.icon className="size-4" aria-hidden="true" />
+                  </span>
+                </div>
                 <div className="space-y-1.5">
                   <h3 className="font-display text-lg font-semibold">
                     {role.title}
@@ -330,7 +392,7 @@ export default async function HomePage({
 
       <section id="faq" className="scroll-mt-20 border-b border-border">
         <div className="mx-auto grid w-full max-w-7xl gap-12 px-4 py-16 md:py-24 lg:grid-cols-[0.85fr_1.15fr]">
-          <div className="space-y-4 self-start lg:sticky lg:top-24">
+          <div className="scroll-reveal space-y-4 self-start lg:sticky lg:top-24">
             <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
               Questions
             </p>
@@ -341,10 +403,13 @@ export default async function HomePage({
               Everything about applying, paying and tracking your semester.
               Still stuck? The registrar can help.
             </p>
-            <Button asChild variant="outline">
+            <Button asChild variant="outline" className="group">
               <Link href="/contact">
                 Contact the registrar
-                <ArrowRight className="size-4" aria-hidden="true" />
+                <ArrowRight
+                  className="size-4 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transform-none"
+                  aria-hidden="true"
+                />
               </Link>
             </Button>
           </div>
@@ -372,7 +437,7 @@ export default async function HomePage({
           CSE-101
         </span>
         <div className="relative mx-auto flex w-full max-w-7xl flex-col items-start gap-8 px-4 py-16 md:flex-row md:items-center md:justify-between md:py-20">
-          <div className="max-w-2xl space-y-4">
+          <div className="scroll-reveal max-w-2xl space-y-4">
             <p className="font-mono text-xs tracking-[0.2em] text-ink-muted uppercase">
               Next semester
             </p>
@@ -387,11 +452,14 @@ export default async function HomePage({
             <Button
               asChild
               size="lg"
-              className="bg-warning text-warning-foreground hover:bg-warning/90"
+              className="group bg-warning text-warning-foreground hover:bg-warning/90"
             >
               <Link href="/register">
                 Create your account
-                <ArrowRight className="size-4" aria-hidden="true" />
+                <ArrowRight
+                  className="size-4 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transform-none"
+                  aria-hidden="true"
+                />
               </Link>
             </Button>
             <Button
@@ -404,7 +472,7 @@ export default async function HomePage({
             </Button>
           </div>
         </div>
-        <div className="relative mx-auto flex w-full max-w-7xl flex-wrap items-center gap-6 px-4 pb-12 text-ink-muted">
+        <div className="scroll-reveal relative mx-auto flex w-full max-w-7xl flex-wrap items-center gap-6 px-4 pb-12 text-ink-muted">
           <span className="flex items-center gap-2 text-sm">
             <Landmark className="size-4" aria-hidden="true" />
             Registrar-approved

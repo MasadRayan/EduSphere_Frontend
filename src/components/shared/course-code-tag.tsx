@@ -18,7 +18,7 @@ export function CourseCodeTag({
 
   return (
     <span className={cn("inline-flex flex-col gap-1", className)}>
-      <span className="inline-flex w-fit items-center rounded-md border border-border bg-card px-2 py-0.5 font-mono text-xs font-medium tracking-tight text-foreground">
+      <span className="inline-flex w-fit items-center rounded-md border border-border bg-card px-2 py-0.5 font-mono text-xs font-medium tracking-tight whitespace-nowrap text-foreground">
         {code}
       </span>
       {barWidth ? (

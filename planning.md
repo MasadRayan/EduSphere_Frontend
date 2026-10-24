@@ -308,7 +308,7 @@ The **course code tag**: a mono code in a bordered tag, used on every course car
 - Sentence case, active verbs: "Approve application", "Start payment", not "Submit".
 - An action keeps its name across button, toast and confirmation.
 - Errors say what happened and what to do next. Empty states invite an action.
-- Motion: one page-load reveal on the landing hero, subtle hover states elsewhere, `prefers-reduced-motion` respected.
+- Motion: one orchestrated page-load sequence on the landing hero (the ledger rows write in, the credit bar fills, the enrolled stamp lands), scroll-driven section reveals where the browser supports view timelines, subtle hover states elsewhere, `prefers-reduced-motion` respected.
 - Quality floor: responsive down to mobile, visible keyboard focus, accessible dialogs and tables.
 
 ## 7. Implementation Phases
