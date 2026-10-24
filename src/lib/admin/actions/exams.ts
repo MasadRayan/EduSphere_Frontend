@@ -5,6 +5,7 @@ import { fieldErrorsFrom, messageFrom, readString } from "@/lib/actions/shared";
 import { endpoints } from "@/lib/api/endpoints";
 import { serverFetchData } from "@/lib/api/server-fetch";
 import {
+  createExamSchema,
   examSchema,
   gradingSchema,
   resultRowSchema,
@@ -22,7 +23,9 @@ export async function adminSaveExamAction(
 ): Promise<ActionResult<null>> {
   await requireAdmin();
 
-  const parsed = examSchema.safeParse({
+  const isEdit = readString(formData.get("mode")) === "edit";
+
+  const parsed = (isEdit ? examSchema : createExamSchema).safeParse({
     courseSectionId: readString(formData.get("courseSectionId")),
     type: readString(formData.get("type")),
     date: readString(formData.get("date")),
@@ -37,7 +40,6 @@ export async function adminSaveExamAction(
     };
   }
 
-  const isEdit = readString(formData.get("mode")) === "edit";
   const examId = readString(formData.get("examId"));
   if (isEdit && !examId) {
     return { ok: false, message: "Missing exam reference." };

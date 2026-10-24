@@ -1,5 +1,6 @@
 import { z } from "zod";
 import {
+  createExamSchema,
   examSchema,
   gradingSchema,
   resultRowSchema,
@@ -7,7 +8,13 @@ import {
 } from "@/lib/schemas/academic";
 import { ATTENDANCE_STATUSES } from "@/types/enums";
 
-export { examSchema, gradingSchema, resultRowSchema, singleResultSchema };
+export {
+  createExamSchema,
+  examSchema,
+  gradingSchema,
+  resultRowSchema,
+  singleResultSchema,
+};
 
 export const applySchema = z.object({
   phone: z.string().trim().max(30, "Phone number is too long").optional(),

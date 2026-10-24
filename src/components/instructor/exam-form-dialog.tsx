@@ -76,6 +76,9 @@ export function ExamFormDialog({
   // user's timezone is known) before the server parses it.
   const dateIso = date ? new Date(date).toISOString() : "";
 
+  // Editing a past exam stays possible, so the future bound is create-only.
+  const minDate = toLocalInput(new Date().toISOString());
+
   const [formState, formAction] = useActionState(
     async (prev: ActionResult<null> | undefined, formData: FormData) => {
       const result = await action(prev, formData);
@@ -193,12 +196,16 @@ export function ExamFormDialog({
             label="Date"
             htmlFor="date"
             required
+            hint={
+              mode === "create" ? "Choose a future date and time." : undefined
+            }
             error={fieldErrors?.date?.[0]}
           >
             <Input
               id="date"
               type="datetime-local"
               required
+              min={mode === "create" ? minDate : undefined}
               value={date}
               onChange={(event) => setDate(event.target.value)}
               aria-invalid={fieldErrors?.date ? true : undefined}

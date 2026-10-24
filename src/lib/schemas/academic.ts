@@ -17,6 +17,18 @@ export const examSchema = z.object({
     .max(1000, "Total marks look too high"),
 });
 
+/**
+ * Creating an exam must use a future date. Editing keeps the base schema so an
+ * existing past exam can still be corrected.
+ */
+export const createExamSchema = examSchema.refine(
+  (data) => data.date.getTime() >= Date.now(),
+  {
+    path: ["date"],
+    message: "Choose a date and time in the future",
+  },
+);
+
 export const gradingSchema = z.object({
   examId: z.string().min(1),
 });
