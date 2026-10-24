@@ -179,6 +179,80 @@ export async function loginAction(
   redirect(next ?? (role ? homePathForRole(role) : "/"));
 }
 
+type DemoLoginRole = "user" | "teacher" | "super-admin";
+
+const demoLoginEnvironment: Record<
+  DemoLoginRole,
+  { email: string | undefined; password: string | undefined }
+> = {
+  user: {
+    email: process.env.DEMO_USER_EMAIL,
+    password: process.env.DEMO_USER_PASSWORD,
+  },
+  teacher: {
+    email: process.env.DEMO_TEACHER_EMAIL,
+    password: process.env.DEMO_TEACHER_PASSWORD,
+  },
+  "super-admin": {
+    email: process.env.DEMO_SUPER_ADMIN_EMAIL,
+    password: process.env.DEMO_SUPER_ADMIN_PASSWORD,
+  },
+};
+
+function isDemoLoginRole(value: string): value is DemoLoginRole {
+  return value in demoLoginEnvironment;
+}
+
+export async function demoLoginAction(
+  _prev: FormState,
+  formData: FormData,
+): Promise<ActionResult<null>> {
+  const role = readString(formData.get("demoRole"));
+  if (!isDemoLoginRole(role)) {
+    return {
+      ok: false,
+      message: "Choose a demo account and try again.",
+    };
+  }
+
+  const credentials = demoLoginEnvironment[role];
+  if (!credentials.email || !credentials.password) {
+    return {
+      ok: false,
+      message: "This demo account is not configured. Please contact support.",
+    };
+  }
+
+  let tokens: Awaited<ReturnType<typeof login>>;
+  try {
+    tokens = await login({
+      email: credentials.email,
+      password: credentials.password,
+    });
+  } catch (error) {
+    return {
+      ok: false,
+      message: messageFrom(
+        error,
+        "We could not log in to the demo account. Please try again.",
+      ),
+    };
+  }
+
+  const store = await cookies();
+  setAuthCookies(store, tokens);
+
+  setFlash(store, {
+    type: "success",
+    message: "Signed in successfully",
+    description: "Welcome to the EduSphere demo.",
+  });
+
+  const tokenRole = decodeRoleFromAccessToken(tokens.accessToken);
+  const next = safeNext(readString(formData.get("next")));
+  redirect(next ?? (tokenRole ? homePathForRole(tokenRole) : "/"));
+}
+
 // TEMPORARY DIAGNOSTIC: records what the backend returned for a Google sign-in
 // attempt so the failure can be identified without a browser. Remove once the
 // root cause is fixed.

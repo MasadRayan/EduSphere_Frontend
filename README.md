@@ -30,6 +30,7 @@ REST backend is a separate service; only the server knows its URL.
    | `API_URL` | server only | Base URL of the backend, for example `http://localhost:8000` |
    | `NEXT_PUBLIC_APP_URL` | public | Public origin of this app, used for redirects and metadata |
    | `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | public | Google OAuth client ID for the sign-in button |
+   | `DEMO_*` | server only | Credentials for the optional demo login buttons |
 
    `API_URL` must never be prefixed with `NEXT_PUBLIC_`, and it is never sent to
    the browser. Access and refresh tokens live only in httpOnly cookies.
@@ -62,10 +63,16 @@ REST backend is a separate service; only the server knows its URL.
    API_URL=https://edusphere-backend-snowy.vercel.app
    NEXT_PUBLIC_APP_URL=https://<your-frontend-domain>
    NEXT_PUBLIC_GOOGLE_CLIENT_ID=<your-google-client-id>
+   DEMO_USER_EMAIL=<demo-user-email>
+   DEMO_USER_PASSWORD=<demo-user-password>
+   DEMO_TEACHER_EMAIL=<demo-teacher-email>
+   DEMO_TEACHER_PASSWORD=<demo-teacher-password>
+   DEMO_SUPER_ADMIN_EMAIL=<demo-super-admin-email>
+   DEMO_SUPER_ADMIN_PASSWORD=<demo-super-admin-password>
    ```
 
-   Mark `API_URL` as a server variable only. Do not mark `NEXT_PUBLIC_*` as
-   sensitive, they are shipped to the browser by design.
+   Mark `API_URL` and `DEMO_*` as server variables only. Do not mark
+   `NEXT_PUBLIC_*` as sensitive, they are shipped to the browser by design.
 
 3. Deploy. Confirm `npm run build` passed locally first; the same command runs
    on Vercel.
