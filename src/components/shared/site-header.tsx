@@ -22,7 +22,7 @@ export async function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-background/80 backdrop-blur">
-      <div className="mx-auto grid h-16 w-full max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-4">
+      <div className="mx-auto grid h-16 w-full max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-4 px-4 md:grid-cols-[1fr_auto_1fr]">
         <Link
           href="/"
           className="col-start-1 flex items-center gap-2 justify-self-start rounded-md outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
@@ -68,8 +68,16 @@ export async function SiteHeader() {
             links={SITE_LINKS}
             accountHref={accountHref}
             accountLabel={accountLabel}
-            showAuthActions={!session}
-            isAuthenticated={Boolean(session)}
+            user={
+              session
+                ? {
+                    name: session.name,
+                    email: session.email,
+                    avatarUrl: session.avatarUrl,
+                    role: session.role,
+                  }
+                : null
+            }
           />
         </div>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu } from "lucide-react";
+import { LayoutDashboard, Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -9,26 +9,35 @@ import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { ROLE_LABEL } from "@/lib/nav";
 import { cn } from "@/lib/utils";
+import type { Role } from "@/types/enums";
+import { AvatarWithFallback } from "./avatar-with-fallback";
 import { isActiveLink } from "./site-nav";
+
+export interface MobileNavUser {
+  name: string;
+  email: string;
+  avatarUrl: string | null;
+  role: Role;
+}
 
 export function MobileNav({
   links,
   accountHref,
   accountLabel,
-  showAuthActions,
-  isAuthenticated,
+  user,
 }: {
   links: { label: string; href: string }[];
   accountHref: string;
   accountLabel: string;
-  showAuthActions: boolean;
-  isAuthenticated: boolean;
+  user: MobileNavUser | null;
 }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -47,9 +56,29 @@ export function MobileNav({
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="w-72">
-        <SheetHeader>
-          <SheetTitle className="font-display">EduSphere</SheetTitle>
-        </SheetHeader>
+        {user ? (
+          <div className="flex items-center gap-3 border-b border-border px-4 pt-4 pr-12 pb-4">
+            <AvatarWithFallback
+              name={user.name}
+              src={user.avatarUrl}
+              size="lg"
+            />
+            <div className="min-w-0 flex-1">
+              <SheetTitle className="truncate">{user.name}</SheetTitle>
+              <SheetDescription className="truncate text-xs">
+                {user.email}
+              </SheetDescription>
+              <span className="mt-1 block font-mono text-[10px] tracking-[0.16em] text-primary uppercase">
+                {ROLE_LABEL[user.role]}
+              </span>
+            </div>
+          </div>
+        ) : (
+          <SheetHeader className="pr-12">
+            <SheetTitle className="font-display">EduSphere</SheetTitle>
+            <SheetDescription className="text-xs">Site menu</SheetDescription>
+          </SheetHeader>
+        )}
         <nav className="flex flex-col gap-1 px-4">
           {links.map((link) => {
             const active = isActiveLink(pathname, link.href);
@@ -70,7 +99,17 @@ export function MobileNav({
           })}
         </nav>
         <SheetFooter>
-          {showAuthActions ? (
+          {user ? (
+            <>
+              <Button asChild onClick={() => setOpen(false)}>
+                <Link href={accountHref}>
+                  <LayoutDashboard className="size-4" aria-hidden="true" />
+                  {accountLabel}
+                </Link>
+              </Button>
+              <LogoutButton className="w-full" />
+            </>
+          ) : (
             <>
               <Button asChild variant="outline" onClick={() => setOpen(false)}>
                 <Link href="/login">Log in</Link>
@@ -78,13 +117,6 @@ export function MobileNav({
               <Button asChild onClick={() => setOpen(false)}>
                 <Link href="/register">Create account</Link>
               </Button>
-            </>
-          ) : (
-            <>
-              <Button asChild onClick={() => setOpen(false)}>
-                <Link href={accountHref}>{accountLabel}</Link>
-              </Button>
-              {isAuthenticated ? <LogoutButton className="w-full" /> : null}
             </>
           )}
         </SheetFooter>
