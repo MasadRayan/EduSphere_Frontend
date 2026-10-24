@@ -25,7 +25,7 @@ export async function SiteHeader() {
       <div className="mx-auto grid h-16 w-full max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-4">
         <Link
           href="/"
-          className="flex items-center gap-2 justify-self-start rounded-md outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
+          className="col-start-1 flex items-center gap-2 justify-self-start rounded-md outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
         >
           <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <GraduationCap className="size-4" aria-hidden="true" />
@@ -37,10 +37,10 @@ export async function SiteHeader() {
 
         <SiteNav
           links={SITE_LINKS}
-          className="hidden items-center gap-1 justify-self-center md:flex"
+          className="col-start-2 hidden items-center gap-1 justify-self-center md:flex"
         />
 
-        <div className="flex items-center gap-2 justify-self-end">
+        <div className="col-start-3 flex items-center gap-2 justify-self-end">
           <ThemeToggle />
           {session ? (
             <AccountMenu
