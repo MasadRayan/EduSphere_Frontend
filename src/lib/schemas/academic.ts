@@ -18,10 +18,10 @@ export const examSchema = z.object({
 });
 
 /**
- * Creating an exam must use a future date. Editing keeps the base schema so an
- * existing past exam can still be corrected.
+ * Exam dates must be in the future on both create and edit. Past exams are
+ * historical records, so editing one means moving it to a future date.
  */
-export const createExamSchema = examSchema.refine(
+export const futureExamSchema = examSchema.refine(
   (data) => data.date.getTime() >= Date.now(),
   {
     path: ["date"],

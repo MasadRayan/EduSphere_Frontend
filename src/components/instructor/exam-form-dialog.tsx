@@ -44,6 +44,15 @@ function toLocalInput(value: string | undefined): string {
   )}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
+// The picker works in whole minutes, so the earliest allowed value is the next
+// minute rather than the current one, which would already be in the past.
+function nextMinuteInput(): string {
+  const now = new Date();
+  now.setSeconds(0, 0);
+  now.setMinutes(now.getMinutes() + 1);
+  return toLocalInput(now.toISOString());
+}
+
 export interface ExamDefaults {
   courseSectionId?: string;
 }
@@ -76,8 +85,9 @@ export function ExamFormDialog({
   // user's timezone is known) before the server parses it.
   const dateIso = date ? new Date(date).toISOString() : "";
 
-  // Editing a past exam stays possible, so the future bound is create-only.
-  const minDate = toLocalInput(new Date().toISOString());
+  // Exam dates are always in the future, on create and on edit.
+  const minDate = nextMinuteInput();
+  const hasPastDate = !!exam && new Date(exam.date).getTime() < Date.now();
 
   const [formState, formAction] = useActionState(
     async (prev: ActionResult<null> | undefined, formData: FormData) => {
@@ -197,7 +207,9 @@ export function ExamFormDialog({
             htmlFor="date"
             required
             hint={
-              mode === "create" ? "Choose a future date and time." : undefined
+              hasPastDate
+                ? "This exam date has passed. Move it to a future date to save changes."
+                : "Choose a future date and time."
             }
             error={fieldErrors?.date?.[0]}
           >
@@ -205,7 +217,7 @@ export function ExamFormDialog({
               id="date"
               type="datetime-local"
               required
-              min={mode === "create" ? minDate : undefined}
+              min={minDate}
               value={date}
               onChange={(event) => setDate(event.target.value)}
               aria-invalid={fieldErrors?.date ? true : undefined}

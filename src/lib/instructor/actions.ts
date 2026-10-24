@@ -10,8 +10,7 @@ import {
   applySchema,
   attendanceRecordSchema,
   attendanceSheetSchema,
-  createExamSchema,
-  examSchema,
+  futureExamSchema,
   gradingSchema,
   profileSchema,
   resultRowSchema,
@@ -110,7 +109,7 @@ export async function saveExamAction(
 
   const isEdit = readString(formData.get("mode")) === "edit";
 
-  const parsed = (isEdit ? examSchema : createExamSchema).safeParse({
+  const parsed = futureExamSchema.safeParse({
     courseSectionId: readString(formData.get("courseSectionId")),
     type: readString(formData.get("type")),
     date: readString(formData.get("date")),

@@ -5,8 +5,7 @@ import { fieldErrorsFrom, messageFrom, readString } from "@/lib/actions/shared";
 import { endpoints } from "@/lib/api/endpoints";
 import { serverFetchData } from "@/lib/api/server-fetch";
 import {
-  createExamSchema,
-  examSchema,
+  futureExamSchema,
   gradingSchema,
   resultRowSchema,
   singleResultSchema,
@@ -25,7 +24,7 @@ export async function adminSaveExamAction(
 
   const isEdit = readString(formData.get("mode")) === "edit";
 
-  const parsed = (isEdit ? examSchema : createExamSchema).safeParse({
+  const parsed = futureExamSchema.safeParse({
     courseSectionId: readString(formData.get("courseSectionId")),
     type: readString(formData.get("type")),
     date: readString(formData.get("date")),

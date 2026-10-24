@@ -1,7 +1,7 @@
 import { z } from "zod";
 import {
-  createExamSchema,
   examSchema,
+  futureExamSchema,
   gradingSchema,
   resultRowSchema,
   singleResultSchema,
@@ -9,8 +9,8 @@ import {
 import { ATTENDANCE_STATUSES } from "@/types/enums";
 
 export {
-  createExamSchema,
   examSchema,
+  futureExamSchema,
   gradingSchema,
   resultRowSchema,
   singleResultSchema,
