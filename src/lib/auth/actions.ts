@@ -179,12 +179,35 @@ export async function loginAction(
   redirect(next ?? (role ? homePathForRole(role) : "/"));
 }
 
+// TEMPORARY DIAGNOSTIC: records what the backend returned for a Google sign-in
+// attempt so the failure can be identified without a browser. Remove once the
+// root cause is fixed.
+async function logGoogleAttempt(
+  detail: Record<string, unknown>,
+): Promise<void> {
+  if (process.env.NODE_ENV === "production") {
+    return;
+  }
+  try {
+    const { appendFile } = await import("node:fs/promises");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    await appendFile(
+      join(tmpdir(), "edusphere-google-login.log"),
+      `${new Date().toISOString()} ${JSON.stringify(detail)}\n`,
+    );
+  } catch {
+    // Diagnostics only, never affects the sign-in result.
+  }
+}
+
 export async function googleLoginAction(
   idToken: string,
   next?: string | null,
 ): Promise<ActionResult<null>> {
   const token = idToken.trim();
   if (!token) {
+    await logGoogleAttempt({ outcome: "empty-token" });
     return { ok: false, message: "Google sign-in did not return a token." };
   }
 
@@ -192,11 +215,26 @@ export async function googleLoginAction(
   try {
     tokens = await googleLogin(token);
   } catch (error) {
+    await logGoogleAttempt(
+      error instanceof ApiError
+        ? {
+            outcome: "backend-error",
+            status: error.status,
+            kind: error.kind,
+            message: error.message,
+          }
+        : { outcome: "unexpected-error", message: String(error) },
+    );
     return {
       ok: false,
       message: messageFrom(error, "We could not sign you in with Google."),
     };
   }
+
+  await logGoogleAttempt({
+    outcome: "tokens",
+    role: decodeRoleFromAccessToken(tokens.accessToken),
+  });
 
   const store = await cookies();
   setAuthCookies(store, tokens);
